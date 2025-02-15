@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:ui="using:FluentAvalonia.UI.Controls"
+			 xmlns:sty="using:FluentAvalonia.Styling"
+             mc:Ignorable="d"
+             x:Class="MacroPad.Controls.Home.NodeLinksDisplay">
+	
+	
+	<Border CornerRadius="8" Background="{DynamicResource SolidBackgroundFillColorQuarternary}">
+		<Grid RowDefinitions="32,*">
+			<Border x:Name="NodeTitleBar" CornerRadius="8 0" Background="{DynamicResource ControlFillColorSecondaryBrush}">
+				<DockPanel>
+					<TextBlock x:Name="NodeTitle" Text="" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="8 0"/>
+					<Button x:Name="DeleteButton" Classes="icon-button" Width="24" Height="24" Padding="0" Margin="0 0 4 0" HorizontalAlignment="Right" DockPanel.Dock="Right">✕</Button>
+				</DockPanel>
+			</Border>
+			<DockPanel Grid.Row="1" Margin="0 8 0 8">
+				<StackPanel x:Name="InputsContainer" DockPanel.Dock="Left" Orientation="Vertical" Spacing="8" Margin="0 0 8 0">
+					<!--<DockPanel>
+						<Path Data="M2,1L6,1L11,6L6,11L2,11L2,1" Fill="Gray" Stroke="#4000" StrokeThickness="2" Width="12" Height="12" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="8 0"/>
+						<TextBlock Text="A sample node run input"/>
+					</DockPanel>
+					<DockPanel>
+						<Ellipse Fill="Red" Stroke="#4000" StrokeThickness="2" Width="12" Height="12" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="8 0"/>
+						<TextBlock Text="A sample node input"/>
+					</DockPanel>-->
+				</StackPanel>
+				<StackPanel x:Name="OutputsContainer" DockPanel.Dock="Right" Orientation="Vertical" Spacing="8">
+					<!--<DockPanel>
+						<Path Data="M2,1L6,1L11,6L6,11L2,11L2,1" Fill="Gray" Stroke="#4000" StrokeThickness="2" Width="12" Height="12" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="8 0"/>
+						<TextBlock Text="A sample node run output"/>
+					</DockPanel>
+					<DockPanel>
+						<Ellipse Fill="Red" Stroke="#4000" StrokeThickness="2" Width="12" Height="12" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="8 0"/>
+						<TextBlock Text="A sample node output" HorizontalAlignment="Right"/>
+					</DockPanel>-->
+				</StackPanel>
+			</DockPanel>
+		</Grid>
+	</Border>
+</UserControl>

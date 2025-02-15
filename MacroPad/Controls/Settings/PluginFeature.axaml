@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MacroPad.Controls.Settings.PluginFeature">
+
+	<UserControl.Styles>
+		<Style Selector="Border.line:pointerover">
+			<Setter Property="Background" Value="#2000"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Border Classes="line" Padding="8 2" CornerRadius="4">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="129"/> <!--TODO: Add a better way to get CheckBox width-->
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" x:Name="FeatureNameDisplay" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" />
+			<CheckBox Grid.Column="1" x:Name="EnableFeature" HorizontalAlignment="Right" VerticalAlignment="Center" >Enable Feature</CheckBox>
+		</Grid>
+	</Border>
+</UserControl>

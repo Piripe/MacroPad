@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MacroPad.Controls.Home.NodePicker.NodePickerCategory">
+	<Grid>
+		<Expander x:Name="CategoryExpander" IsExpanded="True">
+			<WrapPanel x:Name="NodesPanel" Orientation="Horizontal"/>
+		</Expander>
+		<!--<TextBlock x:Name="CategoryName" />-->
+	</Grid>
+</UserControl>

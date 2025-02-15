@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:vm="using:MacroPad.ViewModels"
+			 xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MacroPad.Pages.Settings.General">
+	<Design.DataContext>
+		<vm:GeneralViewModel/>
+	</Design.DataContext>
+	<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+		<StackPanel Margin="8" MaxWidth="512" HorizontalAlignment="Left" Orientation="Vertical">
+			<TextBlock Text="General" FontWeight="Bold" Width="512"/>
+			<Border Classes="card" VerticalAlignment="Stretch" Margin="0,0,5,0">
+				<StackPanel>
+					<Grid RowDefinitions="*,*" ColumnDefinitions="*,Auto">
+						<TextBlock>Run on system startup</TextBlock>
+						<ToggleSwitch x:Name="RunStartup" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0 -13" OnContent="Yes" OffContent="No"/>
+					</Grid>
+
+					<Border Classes="card-separator" />
+
+					<Grid RowDefinitions="*,*" ColumnDefinitions="*,Auto">
+						<TextBlock>Minimize on startup</TextBlock>
+						<ToggleSwitch x:Name="RunMinimized" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0 -13" OnContent="Yes" OffContent="No"/>
+					</Grid>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

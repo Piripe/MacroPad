@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:ui="using:FluentAvalonia.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="250"
+             x:Class="MacroPad.Controls.Settings.PluginCard">
+	
+	<Border Classes="card" Padding="8">
+		<Grid ColumnDefinitions="2*,3*">
+
+			<DockPanel Grid.Column="0">
+				<TextBlock Classes="h4" x:Name="PluginName" DockPanel.Dock="Top"/>
+				<TextBlock x:Name="PluginDescription" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+			</DockPanel>
+
+			<Border Grid.Column="1" BorderBrush="{DynamicResource ButtonBorderBrush}" BorderThickness="1 0 0 0" Margin="10 0 0 0" Padding="10 0 0 0">
+				<Grid RowDefinitions="Auto,*">
+					<TextBlock Classes="h5">Plugin features</TextBlock>
+
+					<ScrollViewer Margin="0 8 0 0" Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+						<StackPanel x:Name="PluginFeatures" Orientation="Vertical" Spacing="4">
+
+						</StackPanel>
+					</ScrollViewer>
+				</Grid>
+			</Border>
+		</Grid>
+	</Border>
+</UserControl>

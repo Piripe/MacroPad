@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:device="using:MacroPad.Core.Device"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:this="using:MacroPad.Controls.Home.StatusEditorTypes"
+             x:Class="MacroPad.Controls.Home.StatusEditorTypes.Palette">
+	<UserControl.Resources>
+		<this:ColorConverter x:Key="colorConverter"/>
+	</UserControl.Resources>
+
+	<StackPanel Height="32" Orientation="Horizontal" VerticalAlignment="Top">
+		<TextBlock Classes="" Margin="0 0 4 0" Text="Color" VerticalAlignment="Center" />
+		<ComboBox x:Name="ColorSelector" Width="256">
+			<ComboBox.ItemTemplate>
+				<DataTemplate x:DataType="device:PaletteValue">
+					<WrapPanel Orientation="Horizontal" Margin="0 2 0 0" VerticalAlignment="Center">
+						<Ellipse Width="18" Height="18" Fill="{Binding Color, Converter={StaticResource colorConverter}}" VerticalAlignment="Center"/>
+						<TextBlock Text="{Binding Name}" Margin="6 0 0 0" VerticalAlignment="Center"/>
+					</WrapPanel>
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
+	</StackPanel>
+</UserControl>
