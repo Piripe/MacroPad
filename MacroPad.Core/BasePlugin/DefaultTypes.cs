@@ -49,7 +49,7 @@ namespace MacroPad.Core.BasePlugin
                 (r)=>r.GetData<bool?>("d") ?? false,
                 [
                     new ComboBox() {
-                        Items = new string[] {"False","True" },
+                        Items = ["False","True"],
                         GetSelection = (IResourceManager resource) => resource.GetData<int>("d"),
                         SelectionChanged = (IResourceManager resource, int value) => resource.SetData("d", value),
                     }

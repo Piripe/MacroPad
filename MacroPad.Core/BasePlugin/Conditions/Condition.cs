@@ -22,14 +22,14 @@ namespace MacroPad.Core.BasePlugin.Conditions
         public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(bool), "") };
 
         public INodeComponent[] Components => new INodeComponent[] {
-            new ComboBox() {Items = new string[] {
+            new ComboBox() {Items = [
                 "Equals",
                 "Not Equals",
                 "Greater",
                 "Greater or Equals",
                 "Lower",
                 "Lower or Equals"
-            },
+            ],
             GetSelection = (IResourceManager resource) => resource.GetData<int>("o"),
             SelectionChanged = (IResourceManager resource, int index) => resource.SetData("o",index)}
         };

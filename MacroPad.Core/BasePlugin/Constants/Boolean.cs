@@ -23,7 +23,7 @@ namespace MacroPad.Core.BasePlugin.Constants
         public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(bool), "") };
 
         public INodeComponent[] Components => new INodeComponent[] { new ComboBox() {
-            Items = new string[] {"False","True" },
+            Items = ["False","True"],
             GetSelection = (IResourceManager resource) => resource.GetData<int>("v"),
             SelectionChanged = (IResourceManager resource, int value) => resource.SetData("v", value),
         } };

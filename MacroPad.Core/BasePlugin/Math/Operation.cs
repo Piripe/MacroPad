@@ -22,7 +22,7 @@ namespace MacroPad.Core.BasePlugin.Math
         public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(decimal), "") };
 
         public INodeComponent[] Components => new INodeComponent[] {
-            new ComboBox() {Items = new string[] {
+            new ComboBox() {Items = [
                 "Add",
                 "Substract",
                 "Multiply",
@@ -30,7 +30,7 @@ namespace MacroPad.Core.BasePlugin.Math
                 "Modulo",
                 "Power",
                 "Root"
-            },
+            ],
             GetSelection = (IResourceManager resource) => resource.GetData<int>("o"),
             SelectionChanged = (IResourceManager resource, int index) => resource.SetData("o",index)}
         };

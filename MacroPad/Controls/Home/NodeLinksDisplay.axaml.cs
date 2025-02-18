@@ -2,27 +2,19 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.Metadata;
-using DynamicData;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
 using MacroPad.Core;
 using MacroPad.Core.Config;
 using MacroPad.Core.Device;
 using MacroPad.Core.Node;
 using MacroPad.Shared.Plugin.Nodes;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reactive.Linq;
 
 namespace MacroPad.Controls.Home;
 
@@ -348,18 +340,49 @@ public partial class NodeLinksDisplay : UserControl
                 dockPanel.Children.Add(numericUpDownControl);
                 break;
             case Shared.Plugin.Nodes.Components.ComboBox comboBox:
-                ComboBox comboBoxControl = new ComboBox() { ItemsSource = comboBox.GetItems != null && NodesEditor != null && NodesEditor.Button != null && NodesEditor.Device != null && NodesEditor.Device.Layout != null && NodesEditor.Device.Layout.OutputTypes.ContainsKey(NodesEditor.Button.Output) ? comboBox.GetItems(resource, NodesEditor.Button, NodesEditor.Device.Layout.OutputTypes[NodesEditor.Button.Output]) : comboBox.Items, SelectedValue = comboBox.GetSelectedItem != null ? comboBox.GetSelectedItem(resource) : "", SelectedIndex = comboBox.GetSelection != null ? comboBox.GetSelection(resource) : 0 };
-                comboBox.ItemsChanged += (s, e) =>
+                ObservableCollection<string> GetItems()
                 {
-                    comboBoxControl.ItemsSource = comboBox.GetItems != null && NodesEditor != null && NodesEditor.Button != null && NodesEditor.Device != null && NodesEditor.Device.Layout != null && NodesEditor.Device.Layout.OutputTypes.ContainsKey(NodesEditor.Button.Output) ? comboBox.GetItems(resource, NodesEditor.Button, NodesEditor.Device.Layout.OutputTypes[NodesEditor.Button.Output]) : comboBox.Items;
+                    if (comboBox.GetItems != null && NodesEditor?.Button != null && NodesEditor.Device?.Layout != null && NodesEditor.Device.Layout.OutputTypes.TryGetValue(NodesEditor.Button.Output, out DeviceOutput? value))
+                    {
+                        return new ObservableCollection<string>(comboBox.GetItems(resource, NodesEditor.Button, value));
+                    }
+                    else
+                    {
+                        return comboBox.Items;
+                    }
+                }
+                ObservableCollection<string> items = GetItems();
+                ComboBox comboBoxControl = new() { ItemsSource = items};
+                
+                void UpdateSelection()
+                {
+                    int index = 0;
+                    if (comboBox.GetSelectedItem != null)
+                    {
+                        string value = comboBox.GetSelectedItem(resource);
+                        index = items.IndexOf(value);
+                    }
+                    if (comboBox.GetSelection != null)
+                    {
+                        index = comboBox.GetSelection(resource);
+                    }
+                    if (index < items.Count && index >= 0) comboBoxControl.SelectedIndex = index;
+                }
+                UpdateSelection();
+
+
+                comboBoxControl.Items.CollectionChanged += (s, e) =>
+                {
+                    UpdateSelection();
                 };
+
                 comboBoxControl.SelectionChanged += (object? sender, SelectionChangedEventArgs e) => {
                     if (comboBox.SelectionChanged != null) comboBox.SelectionChanged(resource, comboBoxControl.SelectedIndex);
                 };
                 comboBoxControl.Width = 196;
                 if (smallMode)
                 {
-                    comboBoxControl.Height = 20d;
+                    comboBoxControl.Height = 20;
                     comboBoxControl.Classes.Add("small");
                 }
                     dockPanel.Children.Add(comboBoxControl);
