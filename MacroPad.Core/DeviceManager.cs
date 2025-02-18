@@ -81,7 +81,7 @@ namespace MacroPad.Core
         }
         public static void EnableProtocol(string pluginId)
         {
-            IProtocol? protocol = PluginLoader.protocols.Find((x) => x.GetType().FullName == pluginId);
+            IProtocol? protocol = PluginLoader.protocols.Find((x) => x.Id == pluginId);
             if (protocol != null)
             {
                 protocol.Enable();
@@ -90,10 +90,10 @@ namespace MacroPad.Core
         }
         public static void DisableProtocol(string pluginId)
         {
-            IProtocol? protocol = PluginLoader.protocols.Find((x) => x.GetType().FullName == pluginId);
+            IProtocol? protocol = PluginLoader.protocols.Find((x) => x.Id == pluginId);
             if (protocol != null)
             {
-                // TODO: Add protocol.Disable() method.
+                protocol.Disable();
                 Config.PluginsConfig[pluginId] = false;
             }
         }

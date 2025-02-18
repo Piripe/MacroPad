@@ -21,6 +21,6 @@ You can currently interact with:
 - AKAI APCmini
 - Novation Launchpad Mini
 
-## Contribution
+## Contributions
 
 For now I'm building the core of the project, so I'd like to make it all myself, but plugins and more supported devices are welcome.

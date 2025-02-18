@@ -14,6 +14,6 @@ namespace MacroPad.Shared.Plugin
         public event EventHandler<DeviceDetectedEventArgs>? DeviceDetected;
         public event EventHandler<DeviceDetectedEventArgs>? DeviceDisconnected;
         public void Enable();
-        // TODO: Disable PluginProtocol
+        public void Disable();
     }
 }
