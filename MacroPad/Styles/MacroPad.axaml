@@ -4,9 +4,9 @@
     <Border Padding="20">
       <!-- Add Controls for Previewer Here -->
 		<StackPanel Spacing="4">
-			<TextBox Classes="small" Text="Coucou"/>
+			<TextBox Classes="small" Text="FooBar"/>
 			<ComboBox Classes="small" Width="128">
-				<ComboBoxItem IsSelected="True">Coucou</ComboBoxItem>
+				<ComboBoxItem IsSelected="True">FooBar</ComboBoxItem>
 			</ComboBox>
 		</StackPanel>
     </Border>

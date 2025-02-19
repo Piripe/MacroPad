@@ -1,9 +1,10 @@
 ﻿using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using MacroPad.Pages;
+using MacroPad.ViewModels;
 using System;
 
-namespace MacroPad.ViewModels
+namespace MacroPad.Views
 {
     public class MainViewViewModel : ViewModelBase
     {

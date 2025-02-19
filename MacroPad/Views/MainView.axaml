@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
 			 xmlns:ui="using:FluentAvalonia.UI.Controls"
-			 xmlns:vm="using:MacroPad.ViewModels"
+			 xmlns:views="using:MacroPad.Views"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,19 +8,13 @@
              x:Class="MacroPad.Views.MainView">
 
 	<Design.DataContext>
-		<vm:MainViewViewModel/>
+		<views:MainViewViewModel/>
 	</Design.DataContext>
 
 	<UserControl.Resources>
 	</UserControl.Resources>
-	
-	<ui:NavigationView Classes="MacroPadAppNav"
-					   AlwaysShowHeader="False"
-					   PaneDisplayMode="Left"
-					   Name="NavView"
-					   IsSettingsVisible="False">
-		<Panel>
-			<ui:Frame Name="FrameView" />
-		</Panel>
-	</ui:NavigationView>
+
+	<Grid ColumnDefinitions="128,*">
+
+	</Grid>
 </UserControl>

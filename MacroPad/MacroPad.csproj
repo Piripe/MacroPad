@@ -36,7 +36,7 @@
 
 
   <ItemGroup>
-    <Compile Update="Controls\Home\DeviceViewer.axaml.cs">
+    <Compile Update="Controls\DeviceViewer.axaml.cs">
       <DependentUpon>DeviceViewer.axaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\Home\NodeLinksDisplay.axaml.cs">
