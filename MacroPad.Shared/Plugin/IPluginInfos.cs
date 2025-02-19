@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MacroPad.Shared.Plugin.Settings;
 
 namespace MacroPad.Shared.Plugin
 {
@@ -18,5 +14,6 @@ namespace MacroPad.Shared.Plugin
         public IProtocol[] Protocols { get; }
         public INodeCategory[] NodeCategories { get; }
         public NodeType[] NodeTypes { get; }
+        public ISettingsComponent[] Settings { get; }
     }
 }
