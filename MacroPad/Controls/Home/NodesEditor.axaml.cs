@@ -3,24 +3,17 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.Metadata;
 using Avalonia.Platform.Storage;
 using Avalonia.VisualTree;
-using DynamicData.Kernel;
 using FluentAvalonia.UI.Controls;
 using MacroPad.Controls.Home.NodesEditorHistory;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
-using MacroPad.Core;
 using MacroPad.Core.Config;
 using MacroPad.Core.Device;
 using MacroPad.Shared.Device;
-using MacroPad.Views;
 using Newtonsoft.Json;
-using Splat;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -33,7 +26,7 @@ public partial class NodesEditor : UserControl
     public DeviceLayoutButton? Button { get; set; }
     public DeviceCore? Device { get; set; }
     public NodeScript CurrentScript => _currentScript;
-    public Dictionary<Path, NodeLineData> LinesData { get; set; } = new Dictionary<Path, NodeLineData>();
+    public Dictionary<Path, NodeLineData> LinesData { get; set; } = [];
     public Path? TracingLine { get; set; }
     public bool TracingLineOut { get; set; }
     public bool TracingLineRunner { get; set; }
@@ -42,14 +35,14 @@ public partial class NodesEditor : UserControl
     public object? TracingLineStartLinks { get; set; }
     public int TracingLineStartIndex { get; set; }
 
-    private NodeScript _currentScript = new NodeScript();
+    private NodeScript _currentScript = new();
 
     public NodeLinksDisplay? EventStartNodeLink => _eventStartNodeLink;
     private NodeLinksDisplay? _eventStartNodeLink;
     public Dictionary<NodeLinks, NodeLinksDisplay> CurrentScriptNodeLinks => _nodeLinks;
-    private Dictionary<NodeLinks, NodeLinksDisplay> _nodeLinks = new Dictionary<NodeLinks, NodeLinksDisplay>();
+    private Dictionary<NodeLinks, NodeLinksDisplay> _nodeLinks = [];
 
-    private List<IHistoryAction> _history = new List<IHistoryAction>();
+    private List<IHistoryAction> _history = [];
     private int _historyIndex = -1;
 
     private Point _addNodePoint;
@@ -114,7 +107,7 @@ public partial class NodesEditor : UserControl
     {
         _history.Clear();
         _historyIndex = -1;
-        EventSelector.SelectedIndex = Button.Type switch
+        EventSelector.SelectedIndex = Button?.Type switch
         {
             ButtonType.Slider => 3,
             _ => 1
@@ -130,7 +123,7 @@ public partial class NodesEditor : UserControl
         _history.Clear();
         _historyIndex = -1;
 
-        NodeLinksDisplay startNodeLinks = new NodeLinksDisplay()
+        NodeLinksDisplay startNodeLinks = new()
         {
             Links = (ButtonEvent)EventSelector.SelectedIndex,
             NodesEditor = this,
@@ -151,7 +144,7 @@ public partial class NodesEditor : UserControl
     }
     public void AddNodeLinksDisplay(NodeLinks links, int linksId)
     {
-        NodeLinksDisplay nodeLinks = new NodeLinksDisplay()
+        NodeLinksDisplay nodeLinks = new()
         {
             Links = links,
             LinksId = linksId,
@@ -169,7 +162,7 @@ public partial class NodesEditor : UserControl
         IEnumerable<Visual> hoverVisuals = DisplayCanvas.GetVisualsAt(e.GetPosition(DisplayCanvas)).Where((x) => (typeof(Shape).IsInstanceOfType(x) && (((string?)((Shape)x).Tag) == "LinkPoint")));
         if (TracingLine != null)
         {
-            if (hoverVisuals.Count() == 0)
+            if (!hoverVisuals.Any())
             {
                 MoveTracingLine(e.GetPosition(DisplayCanvas));
             } else
@@ -184,10 +177,10 @@ public partial class NodesEditor : UserControl
 
     private void NodesEditor_PointerReleased(object? sender, Avalonia.Input.PointerReleasedEventArgs e)
     {
-        IEnumerable<Visual> hoverVisuals = DisplayCanvas.GetVisualsAt(e.GetPosition(DisplayCanvas)).Where((x) => (typeof(Shape).IsInstanceOfType(x) && (((string?)((Shape)x).Tag) == "LinkPoint")));
+        IEnumerable<Visual> hoverVisuals = DisplayCanvas.GetVisualsAt(e.GetPosition(DisplayCanvas)).Where((x) => typeof(Shape).IsInstanceOfType(x) && (((string?)((Shape)x).Tag) == "LinkPoint"));
         if (TracingLine != null && TracingLineBase != null && TracingLineBase.Links != null)
         {
-            if (hoverVisuals.Count() == 0)
+            if (!hoverVisuals.Any())
             {
                 DeleteTracingLine();
             }
@@ -217,7 +210,7 @@ public partial class NodesEditor : UserControl
                         if (hoverNodeLinks.Links is ButtonEvent) CurrentScript.NodeLines.TryGetValue(-1, out currentLine);
                         else
                         {
-                            Path? line = TracingLineBase.RunOutLines.ContainsKey(endIndex) ? TracingLineBase.RunOutLines[endIndex] : null;
+                            Path? line = TracingLineBase.RunOutLines.TryGetValue(endIndex, out Path? value) ? value : null;
                             if (line != null) currentLine = CurrentScript.NodeLines[LinesData[line].Id];
                         }
                     }
@@ -229,7 +222,7 @@ public partial class NodesEditor : UserControl
                         endNode = hoverNodeLinks.LinksId;
                         endIndex = hoverNodeLinks.GetOutPoints.IndexOf((Shape)hoverVisual);
 
-                        Path? line = hoverNodeLinks.GetInLines.ContainsKey(endIndex) ? hoverNodeLinks.GetInLines[endIndex] : null;
+                        Path? line = hoverNodeLinks.GetInLines.TryGetValue(endIndex, out Path? value) ? value : null;
                         if (line != null) currentLine = CurrentScript.NodeLines[LinesData[line].Id];
                     }
                 }
@@ -242,7 +235,7 @@ public partial class NodesEditor : UserControl
                         index = TracingLineBaseIndex;
                         endNode = hoverNodeLinks.LinksId;
                         endIndex = 0;
-                        Path? line = TracingLineBase.RunOutLines.ContainsKey(index) ? TracingLineBase.RunOutLines[index] : null;
+                        Path? line = TracingLineBase.RunOutLines.TryGetValue(index, out Path? value) ? value : null;
                         if (line != null) currentLine = CurrentScript.NodeLines[LinesData[line].Id];
                     }
                     else
@@ -252,7 +245,7 @@ public partial class NodesEditor : UserControl
                         index = hoverNodeLinks.GetInPoints.IndexOf((Shape)hoverVisual);
                         endNode = TracingLineBase.LinksId;
                         endIndex = TracingLineBaseIndex;
-                        Path? line = hoverNodeLinks.GetInLines.ContainsKey(index) ? hoverNodeLinks.GetInLines[index] : null;
+                        Path? line = hoverNodeLinks.GetInLines.TryGetValue(index, out Path? value) ? value : null;
                         if (line != null) currentLine = CurrentScript.NodeLines[LinesData[line].Id];
                     }
                 }
@@ -290,9 +283,8 @@ public partial class NodesEditor : UserControl
         {
             foreach (KeyValuePair<int,int> link in links.Value.Getters)
             {
-                if (CurrentScript.NodeLines.ContainsKey(link.Value))
+                if (CurrentScript.NodeLines.TryGetValue(link.Value, out NodeLine? nodeLine))
                 {
-                    NodeLine nodeLine = CurrentScript.NodeLines[link.Value];
                     NodeLinksDisplay nodeLinksDisplay = _nodeLinks[links.Value];
                     Point start = nodeLinksDisplay.GetInPoints[link.Key].TranslatePoint(new Point(6, 6), DisplayCanvas) ?? new Point(0, 0);
                     IBrush? stroke = nodeLinksDisplay.GetInPoints[link.Key].Fill;
@@ -301,20 +293,18 @@ public partial class NodesEditor : UserControl
             }
             foreach (KeyValuePair<int, int> link in links.Value.Runners)
             {
-                if (CurrentScript.NodeLines.ContainsKey(link.Value))
+                if (CurrentScript.NodeLines.TryGetValue(link.Value, out NodeLine? nodeLine))
                 {
-                    NodeLine nodeLine = CurrentScript.NodeLines[link.Value];
                     NodeLinksDisplay nodeLinksDisplay = _nodeLinks[links.Value];
                     Point start = nodeLinksDisplay.RunOutPoints[link.Key].TranslatePoint(new Point(6, 6), DisplayCanvas) ?? new Point(0, 0);
                     UpdateRunnerLine(nodeLinksDisplay,link.Key,nodeLine,link.Value, start);
                 }
             }
         }
-        if (CurrentScript.NodeLines.ContainsKey(-1) && _eventStartNodeLink != null)
+        if (CurrentScript.NodeLines.TryGetValue(-1, out NodeLine? nodeLine2) && _eventStartNodeLink != null)
         {
-            NodeLine nodeLine = CurrentScript.NodeLines[-1];
             Point start = _eventStartNodeLink.RunOutPoints[0].TranslatePoint(new Point(6, 6), DisplayCanvas) ?? new Point(0, 0);
-            UpdateRunnerLine(_eventStartNodeLink,0,nodeLine, -1, start);
+            UpdateRunnerLine(_eventStartNodeLink,0,nodeLine2, -1, start);
         }
     }
     private void UpdateGetterLine(NodeLinksDisplay startNodeLinksDisplay, int index, NodeLine nodeLine, int lineId, Point start, IBrush? stroke)
@@ -325,12 +315,11 @@ public partial class NodesEditor : UserControl
 
             if (nodeLine.Node >= 0)
             {
-                if (CurrentScript.NodesLinks.ContainsKey(nodeLine.Node))
+                if (CurrentScript.NodesLinks.TryGetValue(nodeLine.Node, out NodeLinks? getterLinks))
                 {
-                    NodeLinks getterLinks = CurrentScript.NodesLinks[nodeLine.Node];
-                if (_nodeLinks.ContainsKey(getterLinks))
+                if (_nodeLinks.TryGetValue(getterLinks, out NodeLinksDisplay? value))
                 {
-                    endNodeLinksDisplay = _nodeLinks[getterLinks];
+                    endNodeLinksDisplay = value;
                     endIndex = nodeLine.PointIndex;
                     visual = endNodeLinksDisplay.GetOutPoints[endIndex];
                 }
@@ -351,7 +340,7 @@ public partial class NodesEditor : UserControl
     public Path AddLine(IBrush? stroke, Point start, Point end, int id, int startLinksId)
     {
 
-        Path line = new Path()
+        Path line = new()
         {
             Stroke = stroke,
             StrokeThickness = 4,
@@ -373,13 +362,12 @@ public partial class NodesEditor : UserControl
 
         if (nodeLine.Node >= 0)
         {
-            if (CurrentScript.NodesLinks.ContainsKey(nodeLine.Node))
+            if (CurrentScript.NodesLinks.TryGetValue(nodeLine.Node, out NodeLinks? runnerLinks))
             {
-                NodeLinks runnerLinks = CurrentScript.NodesLinks[nodeLine.Node];
-                if (_nodeLinks.ContainsKey(runnerLinks))
+                if (_nodeLinks.TryGetValue(runnerLinks, out NodeLinksDisplay? value))
                 {
-                    endNodeLinksDisplay = _nodeLinks[runnerLinks];
-                    visual = _nodeLinks[runnerLinks].RunInPoint;
+                    endNodeLinksDisplay = value;
+                    visual = value.RunInPoint;
                 }
             }
         }
@@ -395,17 +383,16 @@ public partial class NodesEditor : UserControl
     {
         line.Data = GetCurvePathData(LinesData[line].Point1, LinesData[line].Point2);
     }
-    Geometry GetCurvePathData(Point start, Point end)
+
+    static StreamGeometry GetCurvePathData(Point start, Point end)
     {
         if (start.X > end.X)
         {
-            Point end_ = end;
-            end = start;
-            start = end_;
+            (start, end) = (end, start);
         }
         double xDiff = end.X - start.X;
 
-        StreamGeometry streamGeometry = new StreamGeometry();
+        StreamGeometry streamGeometry = new();
         using (StreamGeometryContext context = streamGeometry.Open())
         {
             context.BeginFigure(start, false);
@@ -421,7 +408,7 @@ public partial class NodesEditor : UserControl
     {
         return _nodeLinks[CurrentScript.NodesLinks[lineData.Node]];
     }
-    public int GetNodeLineEndIndex(NodeLine lineData)
+    public static int GetNodeLineEndIndex(NodeLine lineData)
     {
         return lineData.PointIndex;
     }
@@ -579,11 +566,11 @@ public partial class NodesEditor : UserControl
         var topLevel = TopLevel.GetTopLevel(this);
         if (topLevel == null) return;
 
-        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions()
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             Title = "Import Script",
             AllowMultiple = false,
-            FileTypeFilter = new List<FilePickerFileType>() { new FilePickerFileType("MacroPad Script") { Patterns = new List<string>() { "*.mpscript.json" } } }
+            FileTypeFilter = [new FilePickerFileType("MacroPad Script") { Patterns = ["*.mpscript.json"] }]
         });
 
         if (files.Count >= 1)
@@ -602,10 +589,10 @@ public partial class NodesEditor : UserControl
         var topLevel = TopLevel.GetTopLevel(this);
         if (topLevel == null) return;
 
-        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new Avalonia.Platform.Storage.FilePickerSaveOptions()
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {
             Title = "Export Script",
-            FileTypeChoices = new List<FilePickerFileType>() { new FilePickerFileType("MacroPad Script") { Patterns = new List<string>() { "*.mpscript.json" } } },
+            FileTypeChoices = [new FilePickerFileType("MacroPad Script") { Patterns = ["*.mpscript.json"] }],
             DefaultExtension = ".mpscript.json",
             ShowOverwritePrompt = true,
         });

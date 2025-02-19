@@ -1,4 +1,5 @@
 ﻿using MacroPad.Shared.Plugin;
+using MacroPad.Shared.Plugin.Settings;
 
 namespace MacroPad.Core.BasePlugin
 {
@@ -16,10 +17,11 @@ namespace MacroPad.Core.BasePlugin
 
         public string? SourceUrl => null;
 
-        public IProtocol[] Protocols => new IProtocol[0];
+        public IProtocol[] Protocols => [];
 
-        public INodeCategory[] NodeCategories => new INodeCategory[] { new BranchingCategory(), new ConditionsCategory() ,new ConstantsCategory(), new DebugCategory(), new TextCategory()};
+        public INodeCategory[] NodeCategories => [new BranchingCategory(), new ConditionsCategory() ,new ConstantsCategory(), new DebugCategory(), new TextCategory()];
 
-        public NodeType[] NodeTypes => DefaultTypes.types.ToArray();
+        public NodeType[] NodeTypes => [.. DefaultTypes.types];
+        public ISettingsComponent[] Settings => [];
     }
 }

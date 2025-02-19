@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MacroPad.Shared.Plugin.Nodes;
+using MacroPad.Shared.Plugin.Settings;
 
-namespace MacroPad.Shared.Plugin.Nodes.Components
+namespace MacroPad.Shared.Plugin.Components
 {
-    public class NumericUpDown : INodeComponent
+    public class NumericUpDown : INodeComponent, ISettingsComponent
     {
         public decimal Min { get; set; } = 0;
         public decimal Max { get; set; } = 100;

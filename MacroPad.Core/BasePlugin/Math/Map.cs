@@ -1,11 +1,5 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core.BasePlugin.Math
 {
@@ -17,11 +11,11 @@ namespace MacroPad.Core.BasePlugin.Math
 
         public string Id => "Map";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { new TypeNamePair(typeof(decimal), "Value"), new TypeNamePair(typeof(decimal), "Min Input"), new TypeNamePair(typeof(decimal), "Max Input"), new TypeNamePair(typeof(decimal), "Min Output"), new TypeNamePair(typeof(decimal), "Max Output") };
+        public TypeNamePair[] Inputs => [new(typeof(decimal), "Value"), new(typeof(decimal), "Min Input"), new(typeof(decimal), "Max Input"), new(typeof(decimal), "Min Output"), new(typeof(decimal), "Max Output")];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(decimal), "") };
+        public TypeNamePair[] Outputs => [new(typeof(decimal), "")];
 
-        public INodeComponent[] Components => new INodeComponent[0];
+        public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
@@ -31,7 +25,7 @@ namespace MacroPad.Core.BasePlugin.Math
             decimal maxIn = (decimal)resource.GetValue(2);
             decimal minOut = (decimal)resource.GetValue(3);
             decimal maxOut = (decimal)resource.GetValue(4);
-            return new object[] { (value-minIn)/System.Math.Max(maxIn-minIn,0.0001m)*(maxOut-minOut)+minOut };
+            return [(value - minIn) / System.Math.Max(maxIn - minIn, 0.0001m) * (maxOut - minOut) + minOut];
         }
     }
 }

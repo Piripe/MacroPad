@@ -1,11 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using MacroPad.Core;
-using MacroPad.Pages.Settings;
-using MacroPad.Shared.Plugin;
-using System.Diagnostics;
-using System.Linq;
 
 namespace MacroPad.Controls.Settings;
 
@@ -22,7 +17,7 @@ public partial class PluginFeature : UserControl
     {
         FeatureNameDisplay.Text = FeatureName;
         EnableFeature.IsEnabled = !Disabled;
-        EnableFeature.IsChecked = Disabled ? true : DeviceManager.Config.PluginsConfig.ContainsKey(FeatureId) ? DeviceManager.Config.PluginsConfig[FeatureId] : false;
+        EnableFeature.IsChecked = Disabled || (DeviceManager.Config.PluginsConfig.TryGetValue(FeatureId, out bool value) && value);
 
         EnableFeature.IsCheckedChanged += EnableFeature_IsCheckedChanged;
     }

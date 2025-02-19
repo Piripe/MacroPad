@@ -1,19 +1,9 @@
 ﻿using MacroPad.Core.Device;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Controls.Home
 {
-    public class DeviceViewerButtonPressedEventArgs
+    public class DeviceViewerButtonPressedEventArgs(DeviceLayoutButton? button)
     {
-        public DeviceLayoutButton? Button { get; set; }
-
-        public DeviceViewerButtonPressedEventArgs(DeviceLayoutButton? button)
-        {
-            Button = button;
-        }
+        public DeviceLayoutButton? Button { get; set; } = button;
     }
 }

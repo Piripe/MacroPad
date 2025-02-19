@@ -1,10 +1,5 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core.BasePlugin.Branching
 {
@@ -16,11 +11,11 @@ namespace MacroPad.Core.BasePlugin.Branching
 
         public string Id => "GetBranch";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { new TypeNamePair(typeof(bool), ""), new TypeNamePair(typeof(object), "False"), new TypeNamePair(typeof(object), "True") };
+        public TypeNamePair[] Inputs => [new(typeof(bool), ""), new(typeof(object), "False"), new(typeof(object), "True")];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(object), "") };
+        public TypeNamePair[] Outputs => [new(typeof(object), "")];
 
-        public INodeComponent[] Components => new INodeComponent[0];
+        public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)

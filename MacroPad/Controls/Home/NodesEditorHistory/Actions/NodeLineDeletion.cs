@@ -2,34 +2,20 @@
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using MacroPad.Core.Config;
-using MacroPad.Core.Device;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
 {
-    public class NodeLineDeletion : IHistoryAction
+    public class NodeLineDeletion(object links, bool isRunner, int index, NodeLine nodeLine, NodesEditor editor) : IHistoryAction
     {
-        public object Links { get; set; }
-        public bool IsRunner { get; set; }
-        public int Index { get; set; }
-        public NodeLine NodeLine { get; set; }
-        public NodesEditor Editor { get; set; }
+        public object Links { get; set; } = links;
+        public bool IsRunner { get; set; } = isRunner;
+        public int Index { get; set; } = index;
+        public NodeLine NodeLine { get; set; } = nodeLine;
+        public NodesEditor Editor { get; set; } = editor;
         internal int nodeLineId;
-        public NodeLineDeletion(object links, bool isRunner, int index, NodeLine nodeLine, NodesEditor editor)
-        {
-            Links = links;
-            IsRunner = isRunner;
-            Index = index;
-            NodeLine = nodeLine;
-            Editor = editor;
-        }
 
-        private (NodeLinksDisplay, object, NodeLinksDisplay, int)? GetFullDatas()
+        private (NodeLinksDisplay, NodeLinksDisplay, int)? GetFullDatas()
         {
             NodeLinksDisplay? startLinksDisplay = Editor.GetNodeLinksDisplay(Links);
             object endLinks = Editor.GetNodeLineEnd(NodeLine, IsRunner);
@@ -37,17 +23,16 @@ namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
 
             if (startLinksDisplay == null || endLinksDisplay == null) return null;
 
-            int endIndex = Editor.GetNodeLineEndIndex(NodeLine);
+            int endIndex = NodesEditor.GetNodeLineEndIndex(NodeLine);
 
-            return (startLinksDisplay, endLinks, endLinksDisplay, endIndex);
+            return (startLinksDisplay, endLinksDisplay, endIndex);
         }
 
         public void Do()
         {
             var fullData = GetFullDatas();
             if (fullData == null) return;
-
-            var (startLinksDisplay, endLinks, endLinksDisplay, endIndex) = fullData.Value;
+            var (startLinksDisplay, endLinksDisplay, _) = fullData.Value;
 
             Path? linePath = IsRunner ? startLinksDisplay.RunOutLines[Index] : startLinksDisplay.GetInLines[Index];
             if (linePath == null) return;
@@ -83,10 +68,10 @@ namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
             var fullData = GetFullDatas();
             if (fullData == null) return;
 
-            var (startLinksDisplay, endLinks, endLinksDisplay, endIndex) = fullData.Value;
+            var (startLinksDisplay, endLinksDisplay, endIndex) = fullData.Value;
 
             IBrush? brush;
-            Point start = new Point(0,0);
+            Point start = new(0,0);
             Point end = start;
 
 

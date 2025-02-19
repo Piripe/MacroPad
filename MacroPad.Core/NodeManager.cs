@@ -4,14 +4,6 @@ using MacroPad.Core.Node;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core
 {
@@ -19,9 +11,9 @@ namespace MacroPad.Core
     {
         const int NODE_EXECUTION_LIMIT = 2048;
 
-        public static Dictionary<Type, NodeType> Types = new Dictionary<Type, NodeType>();
-        public static Dictionary<string, INodeRunner> Runners = new Dictionary<string, INodeRunner>();
-        public static Dictionary<string, INodeGetter> Getters = new Dictionary<string, INodeGetter>();
+        public static Dictionary<Type, NodeType> Types = [];
+        public readonly static Dictionary<string, INodeRunner> Runners = [];
+        public readonly static Dictionary<string, INodeGetter> Getters = [];
         public static DeviceCore? CurrentDevice { get; private set; }
         public static DeviceLayoutButton? CurrentButton { get; private set; }
 
@@ -48,14 +40,14 @@ namespace MacroPad.Core
         {
             CurrentDevice = device;
             CurrentButton = button;
-            Dictionary<int, object[]> cache = new Dictionary<int, object[]>();
+            Dictionary<int, object[]> cache = [];
             int nodeExecutionLimit = NODE_EXECUTION_LIMIT;
 
             void RunLine(int lineId)
             {
-                if (!script.NodeLines.ContainsKey(lineId)) return;
+                if (!script.NodeLines.TryGetValue(lineId, out NodeLine? value)) return;
 
-                int nodeLinkId = script.NodeLines[lineId].Node;
+                int nodeLinkId = value.Node;
 
                 RunLinks(nodeLinkId);
             }
@@ -65,18 +57,13 @@ namespace MacroPad.Core
                 if (nodeExecutionLimit > 0)
                 {
                     nodeExecutionLimit--;
-                    if (!script.NodesLinks.ContainsKey(linksId)) return;
-                    NodeLinks links = script.NodesLinks[linksId];
-
-                    if (!Runners.ContainsKey(links.Id)) return;
-                    INodeRunner nodeRunner = Runners[links.Id];
-
-
+                    if (!script.NodesLinks.TryGetValue(linksId, out NodeLinks? links)) return;
+                    if (!Runners.TryGetValue(links.Id, out INodeRunner? nodeRunner)) return;
                     object GetValue(int index)
                     {
                         NodeType type = Types[nodeRunner.Inputs[index].Type];
                         object value = type.DefaultValue;
-                        if (links.Getters.ContainsKey(index)) value = GetLine(links.Getters[index]) ?? type.DefaultValue;
+                        if (links.Getters.TryGetValue(index, out int value2)) value = GetLine(value2) ?? type.DefaultValue;
                         else return GetConst(links.Consts, type, index) ?? type.DefaultValue;
                         if (value.GetType().IsAssignableFrom(typeof(JValue))) value = ((JValue)value).Value ?? type.DefaultValue;
                         if (type.Type.IsAssignableFrom(value.GetType())) return value;
@@ -89,16 +76,13 @@ namespace MacroPad.Core
                     if (cache.ContainsKey(linksId)) cache[linksId] = result.Results;
                     else cache.Add(linksId, result.Results);
 
-                    if (links.Runners.ContainsKey(result.RunnerOutputIndex)) RunLine(links.Runners[result.RunnerOutputIndex]);
+                    if (links.Runners.TryGetValue(result.RunnerOutputIndex, out int value)) RunLine(value);
                 }
             }
 
             object? GetLine(int lineId)
             {
-                if (!script.NodeLines.ContainsKey(lineId)) return null;
-
-                NodeLine nodeLine = script.NodeLines[lineId];
-                
+                if (!script.NodeLines.TryGetValue(lineId, out NodeLine? nodeLine)) return null;
                 return GetLinks(nodeLine.Node,nodeLine.PointIndex);
             }
 
@@ -111,17 +95,13 @@ namespace MacroPad.Core
                     {
                         if (index < cache[linksId].Length) return cache[linksId][index];
                     }
-                    if (!script.NodesLinks.ContainsKey(linksId)) return null;
-                    NodeLinks links = script.NodesLinks[linksId];
-
-                    if (!Getters.ContainsKey(links.Id)) return null;
-                    INodeGetter nodeGetter = Getters[links.Id];
-
+                    if (!script.NodesLinks.TryGetValue(linksId, out NodeLinks? links)) return null;
+                    if (!Getters.TryGetValue(links.Id, out INodeGetter? nodeGetter)) return null;
                     object GetValue(int index)
                     {
                         NodeType type = Types[nodeGetter.Inputs[index].Type];
                         object value = type.DefaultValue;
-                        if (links.Getters.ContainsKey(index)) value = GetLine(links.Getters[index]) ?? type.DefaultValue;
+                        if (links.Getters.TryGetValue(index, out int value2)) value = GetLine(value2) ?? type.DefaultValue;
                         else return GetConst(links.Consts, type, index) ?? type.DefaultValue;
                         if (value.GetType().IsAssignableFrom(typeof(JValue))) value = ((JValue)value).Value ?? type.DefaultValue;
                         if (type.Type.IsAssignableFrom(value.GetType())) return value;
@@ -131,9 +111,7 @@ namespace MacroPad.Core
 
                     object[] result = nodeGetter.GetOutputs(new NodeResourceManager(GetValue, links.Data));
 
-                    if (cache.ContainsKey(linksId)) cache[linksId] = result;
-                    else cache.Add(linksId, result);
-
+                    if (!cache.TryAdd(linksId, result)) cache[linksId] = result;
                     if (index < result.Length) return result[index];
                 }
                 return null;
@@ -141,9 +119,7 @@ namespace MacroPad.Core
 
             object? GetConst(Dictionary<int,Dictionary<string, JToken>> consts, NodeType type, int index)
             {
-                if (!consts.ContainsKey(index)) return null;
-                Dictionary<string, JToken> data = consts[index];
-
+                if (!consts.TryGetValue(index, out Dictionary<string, JToken>? data)) return null;
                 return type.Load != null ? type.Load(new NodeResourceManager((i) => throw new Exception("Can't get value of a type"), data)) : null;
             }
 

@@ -1,12 +1,6 @@
 ﻿using MacroPad.Shared.Plugin.Protocol;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core.Device
 {
@@ -21,9 +15,9 @@ namespace MacroPad.Core.Device
         [JsonProperty("name")]
         public string Name { get; set; } = "";
         [JsonProperty("outputs")]
-        public Dictionary<string, DeviceOutput> OutputTypes { get; set; } = new Dictionary<string, DeviceOutput>();
+        public Dictionary<string, DeviceOutput> OutputTypes { get; set; } = [];
         [JsonProperty("buttons")]
-        public DeviceLayoutButton[] Buttons { get; set; } = new DeviceLayoutButton[0];
+        public DeviceLayoutButton[] Buttons { get; set; } = [];
         [JsonProperty("assets")]
         public string AssetsFolder { get; set; } = "";
         [JsonProperty("width")]

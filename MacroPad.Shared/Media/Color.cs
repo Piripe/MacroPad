@@ -1,13 +1,6 @@
-﻿using MacroPad.Shared.Plugin.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MacroPad.Shared.Media
+﻿namespace MacroPad.Shared.Media
 {
-    public struct Color
+    public readonly struct Color
     {
 
         public byte A { get; } = 255;

@@ -6,7 +6,6 @@ using FluentAvalonia.UI.Navigation;
 using MacroPad.Pages;
 using MacroPad.ViewModels;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MacroPad.Views
@@ -97,8 +96,8 @@ namespace MacroPad.Views
 
         private IEnumerable<NavigationViewItem> GetNavigationViewItems()
         {
-            return new List<NavigationViewItem>
-        {
+            return
+        [
             new()
             {
                 Content = "Home",
@@ -106,13 +105,13 @@ namespace MacroPad.Views
                 IconSource = (IconSource)this.FindResource("HomeIcon")!,
                 Classes = { "MacroPadAppNav" }
             }
-        };
+        ];
         }
 
         private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems()
         {
-            return new List<NavigationViewItem>
-        {
+            return
+        [
             new()
             {
                 Content = "Settings",
@@ -120,7 +119,7 @@ namespace MacroPad.Views
                 IconSource = (IconSource)this.FindResource("SettingsIcon")!,
                 Classes = { "MacroPadAppNav" }
             }
-        };
+        ];
         }
 
         private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)

@@ -1,14 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using FluentAvalonia.Core;
 using MacroPad.Core.Device;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MacroPad.Controls.Home.NodePicker;
@@ -45,7 +42,7 @@ public partial class NodePickerCategory : UserControl
         }
     }
 
-    private List<Button> _buttons = new List<Button>();
+    private readonly HashSet<Button> _buttons = [];
     private void AddNode(string name, string description, string id)
     {
         var button = new Button()
@@ -82,7 +79,7 @@ public partial class NodePickerCategory : UserControl
         {
             if (button.Tag is string[] tags)
             {
-                if (!string.IsNullOrEmpty(tags.FirstOrDefault(x => x.Contains(searchText, System.StringComparison.InvariantCultureIgnoreCase))))
+                if (!string.IsNullOrEmpty(tags.FirstOrDefault(x => x.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))))
                 {
                     button.IsVisible = true;
                     visible = true;

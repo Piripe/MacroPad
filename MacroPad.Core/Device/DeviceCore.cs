@@ -1,14 +1,6 @@
 ﻿using MacroPad.Core.Config;
 using MacroPad.Shared.Plugin.Protocol;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using MacroPad.Shared.Device;
 
 namespace MacroPad.Core.Device
@@ -19,13 +11,13 @@ namespace MacroPad.Core.Device
         public DeviceLayout? Layout { get; set; }
         public List<DeviceProfile> DeviceProfiles { get; }
         public int CurrentProfileIndex { get; set; }
-        public int DefaultProfile { get => DeviceManager.Config.DefaultProfile.ContainsKey(ProtocolDevice.Id) ? DeviceManager.Config.DefaultProfile[ProtocolDevice.Id] : 0; set => DeviceManager.Config.DefaultProfile[ProtocolDevice.Id] = value; }
+        public int DefaultProfile { get => DeviceManager.Config.DefaultProfile.TryGetValue(ProtocolDevice.Id, out int value) ? value : 0; set => DeviceManager.Config.DefaultProfile[ProtocolDevice.Id] = value; }
         public DeviceProfile? CurrentProfile { get; set; }
         public event EventHandler<DeviceCoreOutputSetEventArgs>? OutputSet;
         public event EventHandler<DeviceCoreInputEventArgs>? Input;
         public event EventHandler? ProfileSelected;
 
-        public Dictionary<DeviceLayoutButton, object> LayoutButtonsCurrentStatus { get; set; } = new Dictionary<DeviceLayoutButton, object>();
+        public Dictionary<DeviceLayoutButton, object> LayoutButtonsCurrentStatus { get; set; } = [];
         public Dictionary<int, DeviceInputEventArgs> ButtonsCurrentValue => _lastValue;
 
 
@@ -35,8 +27,8 @@ namespace MacroPad.Core.Device
         {
             ProtocolDevice = protocolDevice;
             Layout = DeviceLayout.SearchLayout(protocolDevice);
-            DeviceProfiles = DeviceManager.Config.DevicesProfiles.ContainsKey(protocolDevice.Id) ? DeviceManager.Config.DevicesProfiles[protocolDevice.Id] : new List<DeviceProfile>();
-            CurrentProfileIndex = DeviceManager.Config.DefaultProfile.ContainsKey(protocolDevice.Id) ? DeviceManager.Config.DefaultProfile[protocolDevice.Id] : 0;
+            DeviceProfiles = DeviceManager.Config.DevicesProfiles.TryGetValue(protocolDevice.Id, out List<DeviceProfile>? value) ? value : [];
+            CurrentProfileIndex = DeviceManager.Config.DefaultProfile.TryGetValue(protocolDevice.Id, out int value2) ? value2 : 0;
 
             ProtocolDevice.DeviceInput += ProtocolDevice_DeviceInput;
         }
@@ -65,16 +57,12 @@ namespace MacroPad.Core.Device
             {
                 foreach (DeviceLayoutButton button in Layout.Buttons)
                 {
-                    if (Layout.OutputTypes.ContainsKey(button.Output))
+                    if (Layout.OutputTypes.TryGetValue(button.Output, out DeviceOutput? output))
                     {
-                        DeviceOutput output = Layout.OutputTypes[button.Output];
-                        if (CurrentProfile.ButtonsConfig.ContainsKey(button.X))
+                        if (CurrentProfile.ButtonsConfig.TryGetValue(button.X, out Dictionary<int, ButtonConfig>? buttonsColumn))
                         {
-                            Dictionary<int, ButtonConfig> buttonsColumn = CurrentProfile.ButtonsConfig[button.X];
-                            if (buttonsColumn.ContainsKey(button.Y))
+                            if (buttonsColumn.TryGetValue(button.Y, out ButtonConfig? buttonConfig))
                             {
-                                ButtonConfig buttonConfig = buttonsColumn[button.Y];
-
                                 switch (output.OutputType)
                                 {
                                     case OutputType.Palette:
@@ -117,17 +105,14 @@ namespace MacroPad.Core.Device
         }
         public void SetButtonContent(DeviceLayoutButton button, object content)
         {
-            if (Layout!=null && Layout.OutputTypes.ContainsKey(button.Output) && (LayoutButtonsCurrentStatus) != content)
+            if (Layout!=null && Layout.OutputTypes.TryGetValue(button.Output, out DeviceOutput? output) && (LayoutButtonsCurrentStatus) != content)
             {
-                DeviceOutput output = Layout.OutputTypes[button.Output];
                 switch (output.OutputType) {
                     case OutputType.Palette:
                         if (content.GetType() == typeof(int)) ProtocolDevice.SetButtonPalette(button.Id, output.Palette[(int)content].Value);
                         break;
                 }
-                if (LayoutButtonsCurrentStatus.ContainsKey(button)) LayoutButtonsCurrentStatus[button] = content;
-                else LayoutButtonsCurrentStatus.Add(button, content); 
-
+                if (!LayoutButtonsCurrentStatus.TryAdd(button, content)) LayoutButtonsCurrentStatus[button] = content;
                 OutputSet?.Invoke(this, new DeviceCoreOutputSetEventArgs(button, content));
             }
         }
@@ -135,7 +120,7 @@ namespace MacroPad.Core.Device
         {
             if (Layout != null)
             {
-                Dictionary<string, object> clearValues = new();
+                Dictionary<string, object> clearValues = [];
                 foreach (DeviceLayoutButton btn in Layout.Buttons)
                 {
                     if (!clearValues.ContainsKey(btn.Output))
@@ -170,7 +155,7 @@ namespace MacroPad.Core.Device
             return null;
         }
 
-        private Dictionary<int, DeviceInputEventArgs> _lastValue = new Dictionary<int, DeviceInputEventArgs>();
+        private readonly Dictionary<int, DeviceInputEventArgs> _lastValue = [];
         private void ProtocolDevice_DeviceInput(object? sender, DeviceInputEventArgs e)
         {
             DeviceLayoutButton? button = IdToButton(e.ButtonID);
@@ -179,7 +164,7 @@ namespace MacroPad.Core.Device
                 Input?.Invoke(this,new DeviceCoreInputEventArgs(button, e.Value,e.IsPressed));
 
                 DeviceInputEventArgs lastE;
-                if (_lastValue.ContainsKey(button.Id)) lastE=_lastValue[button.Id];
+                if (_lastValue.TryGetValue(button.Id, out DeviceInputEventArgs? value)) lastE = value;
                 else
                 {
                     lastE = new DeviceInputEventArgs(e.ButtonID,0);
@@ -192,26 +177,16 @@ namespace MacroPad.Core.Device
 
                 if (lastE.Value != e.Value) RunEvent(button, ButtonEvent.ValueChanged);
 
-
-
-
-                //if (e.IsPressed && Layout != null && Layout.OutputTypes.ContainsKey(button.Output))
-                //{
-                //    DeviceOutput output = Layout.OutputTypes[button.Output];
-                //    if (output.OutputType == OutputType.Palette) SetButtonContent(button,Random.Shared.Next(0, output.Palette.Length - 1));
-                //}
             }
         }
         public void RunEvent(DeviceLayoutButton button, ButtonEvent e) {
-            if (CurrentProfile != null && CurrentProfile.ButtonsConfig.ContainsKey(button.X))
+            if (CurrentProfile != null && CurrentProfile.ButtonsConfig.TryGetValue(button.X, out Dictionary<int, ButtonConfig>? columnButtons))
             {
-                Dictionary<int, ButtonConfig> columnButtons = CurrentProfile.ButtonsConfig[button.X];
-                if (columnButtons.ContainsKey(button.Y))
+                if (columnButtons.TryGetValue(button.Y, out ButtonConfig? buttonConfig))
                 {
-                    ButtonConfig buttonConfig = columnButtons[button.Y];
-                    if (buttonConfig.EventScripts.ContainsKey(e))
+                    if (buttonConfig.EventScripts.TryGetValue(e, out NodeScript? value))
                     {
-                        NodeManager.Run(buttonConfig.EventScripts[e], this, button);
+                        NodeManager.Run(value, this, button);
                     }
                 }
             }

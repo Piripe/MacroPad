@@ -1,22 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MacroPad.Core.Device
+﻿namespace MacroPad.Core.Device
 {
-    public class DeviceCoreInputEventArgs
+    public class DeviceCoreInputEventArgs(DeviceLayoutButton button, float value, bool isPressed)
     {
-        public DeviceLayoutButton Button { get; set; }
-        public float Value { get; set; }
-        public bool IsPressed { get; set; }
-
-        public DeviceCoreInputEventArgs(DeviceLayoutButton button, float value, bool isPressed)
-        {
-            Button = button;
-            Value = value;
-            IsPressed = isPressed;
-        }
+        public DeviceLayoutButton Button { get; set; } = button;
+        public float Value { get; set; } = value;
+        public bool IsPressed { get; set; } = isPressed;
     }
 }

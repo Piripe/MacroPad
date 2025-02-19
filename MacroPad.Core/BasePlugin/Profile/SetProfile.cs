@@ -1,14 +1,7 @@
-﻿using MacroPad.Core.Config;
-using MacroPad.Core.Device;
+﻿using MacroPad.Core.Device;
 using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Profile
 {
@@ -20,12 +13,12 @@ namespace MacroPad.Core.BasePlugin.Profile
 
         public string Id => "SetProfile";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[0];
+        public TypeNamePair[] Inputs => [];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[0];
+        public TypeNamePair[] Outputs => [];
 
         public int RunnerOutputCount => 1;
-        public string[] RunnerOutputsName => new string[0];
+        public string[] RunnerOutputsName => [];
 
         private int GetProfileIndex(DeviceCore? device, IResourceManager resource)
         {
@@ -38,11 +31,11 @@ namespace MacroPad.Core.BasePlugin.Profile
             return index;
         }
 
-        public INodeComponent[] Components => new INodeComponent[] {
+        public INodeComponent[] Components => [
             new ComboBox() {
                 GetItems = (IResourceManager resource, IDeviceLayoutButton button, IDeviceOutput output) =>
                 {
-                    return DeviceManager.SelectedDevice?.DeviceProfiles.Select(x=>x.Name).ToArray() ?? new string[0];
+                    return DeviceManager.SelectedDevice?.DeviceProfiles.Select(x=>x.Name).ToArray() ?? [];
                 },
                 GetSelection = (IResourceManager resource) => GetProfileIndex(DeviceManager.SelectedDevice,resource),
                 SelectionChanged = (IResourceManager resource, int selection) =>
@@ -51,13 +44,13 @@ namespace MacroPad.Core.BasePlugin.Profile
                     resource.SetData("profileIndex", selection);
                 }
             }
-        };
+        ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public NodeRunnerResult Run(IResourceManager resource)
         {
             if (NodeManager.CurrentDevice != null) NodeManager.CurrentDevice.SelectProfile(GetProfileIndex(NodeManager.CurrentDevice, resource));
-            return new NodeRunnerResult() { Results = new object[0], RunnerOutputIndex = 0 };
+            return new NodeRunnerResult() { Results = [], RunnerOutputIndex = 0 };
         }
     }
 }

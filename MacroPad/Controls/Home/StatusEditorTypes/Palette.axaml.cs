@@ -17,7 +17,7 @@ public partial class Palette : UserControl
     public PaletteValue[]? Colors { get; set; }
     public int SelectedColor { get; set; }
     public DeviceCore Device { get; set; } = new DeviceCore(new BaseDevice());
-    public DeviceLayoutButton Button { get; set; }
+    public DeviceLayoutButton? Button { get; set; }
     public ButtonConfig ButtonConfig { get; set; } = new ButtonConfig();
 
     public Palette()
@@ -29,7 +29,7 @@ public partial class Palette : UserControl
     private void ColorSelector_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         ButtonConfig.Status.Value = ColorSelector.SelectedIndex;
-        Device.SetButtonContent(Button, ColorSelector.SelectedIndex);
+        if (Button != null) Device.SetButtonContent(Button, ColorSelector.SelectedIndex);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

@@ -1,11 +1,8 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MacroPad.Core;
 using MacroPad.Core.Device;
-using MacroPad.Views;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MacroPad

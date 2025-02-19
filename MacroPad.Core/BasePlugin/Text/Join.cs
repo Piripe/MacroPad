@@ -16,16 +16,16 @@ namespace MacroPad.Core.BasePlugin.Text
 
         public string Id => "Join";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { new TypeNamePair(typeof(string),"Text 1"), new TypeNamePair(typeof(string), "Text 2") };
+        public TypeNamePair[] Inputs => [new(typeof(string), "Text 1"), new(typeof(string), "Text 2")];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(string), "") };
+        public TypeNamePair[] Outputs => [new(typeof(string), "")];
 
-        public INodeComponent[] Components => new INodeComponent[0];
+        public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
         {
-            return new object[] { string.Concat(resource.GetValue(0), resource.GetValue(1)) };
+            return [string.Concat(resource.GetValue(0), resource.GetValue(1))];
         }
     }
 }

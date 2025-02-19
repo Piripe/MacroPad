@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
 using MacroPad.Core;
 using MacroPad.Core.Config;
@@ -23,13 +22,13 @@ public partial class NodePicker : UserControl
         InitializeComponent();
     }
 
-    private List<NodePickerCategory> _categories = new List<NodePickerCategory>();
+    private List<NodePickerCategory> _categories = [];
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         if (CategoriesPanel.Children.Count != PluginLoader.nodeCategories.Count && Editor != null && Editor.Button != null)
         {
             DeviceOutput? output = null;
-            if (Editor.Device != null && Editor.Device.Layout != null && Editor.Device.Layout.OutputTypes.ContainsKey(Editor.Button.Output)) output = Editor.Device.Layout.OutputTypes[Editor.Button.Output];
+            if (Editor.Device != null && Editor.Device.Layout != null && Editor.Device.Layout.OutputTypes.TryGetValue(Editor.Button.Output, out DeviceOutput? value)) output = value;
             CategoriesPanel.Children.Clear();
             foreach (INodeCategory category in PluginLoader.nodeCategories)
             {

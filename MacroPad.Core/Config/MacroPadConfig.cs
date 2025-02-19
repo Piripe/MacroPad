@@ -1,25 +1,20 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core.Config
 {
     public class MacroPadConfig
     {
         [JsonProperty("plugins")]
-        public Dictionary<string, bool> PluginsConfig { get; set; } = new Dictionary<string, bool>();
+        public Dictionary<string, bool> PluginsConfig { get; set; } = [];
         [JsonProperty("enabledDevices")]
-        public Dictionary<string, bool> EnabledDevices { get; set; } = new Dictionary<string, bool>();
+        public Dictionary<string, bool> EnabledDevices { get; set; } = [];
         [JsonProperty("devicesProfile")]
-        public Dictionary<string, int> DefaultProfile { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, int> DefaultProfile { get; set; } = [];
         [JsonProperty("devices")]
-        public Dictionary<string, List<DeviceProfile>> DevicesProfiles { get; set; } = new Dictionary<string, List<DeviceProfile>>();
+        public Dictionary<string, List<DeviceProfile>> DevicesProfiles { get; set; } = [];
         [JsonProperty("variables")]
-        public Dictionary<string, JToken> Variables { get; set; } = new Dictionary<string, JToken>();
+        public Dictionary<string, JToken> Variables { get; set; } = [];
 
 
 

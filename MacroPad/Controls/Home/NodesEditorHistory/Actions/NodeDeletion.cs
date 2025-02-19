@@ -1,12 +1,8 @@
 ﻿using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using MacroPad.Core.Config;
-using ReactiveUI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
 {
@@ -15,8 +11,8 @@ namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
         public NodeLinks Node { get; set; }
         public int NodeId { get; set; }
         public NodesEditor Editor { get; set; }
-        private List<NodeLineDeletion> _linesDeletion = new List<NodeLineDeletion>();
-        private IHistoryAction _nodeAddition;
+        private readonly List<NodeLineDeletion> _linesDeletion = [];
+        private readonly NodeAddition _nodeAddition;
 
         public NodeDeletion(NodeLinks node, int nodeId, NodesEditor editor)
         {

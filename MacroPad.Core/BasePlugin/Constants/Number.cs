@@ -1,12 +1,6 @@
-﻿using MacroPad.Core.BasePlugin.Text;
-using MacroPad.Shared.Device;
+﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Constants
 {
@@ -18,16 +12,16 @@ namespace MacroPad.Core.BasePlugin.Constants
 
         public string Id => "Number";
         
-        public TypeNamePair[] Inputs => new TypeNamePair[0];
+        public TypeNamePair[] Inputs => [];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(decimal), "") };
+        public TypeNamePair[] Outputs => [new(typeof(decimal), "")];
 
-        public INodeComponent[] Components => new INodeComponent[] { new NumericUpDown() {
+        public INodeComponent[] Components => [ new NumericUpDown() {
             Min = decimal.MinValue,
             Max = decimal.MaxValue,
             GetValue = (IResourceManager resource) => resource.GetData<decimal>("v"),
             ValueChanged = (IResourceManager resource, decimal value) => resource.SetData("v", value),
-        } };
+        } ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)

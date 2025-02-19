@@ -1,12 +1,6 @@
-﻿using MacroPad.Core.BasePlugin.Text;
-using MacroPad.Shared.Device;
+﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Constants
 {
@@ -18,20 +12,20 @@ namespace MacroPad.Core.BasePlugin.Constants
 
         public string Id => "Boolean";
         
-        public TypeNamePair[] Inputs => new TypeNamePair[0];
+        public TypeNamePair[] Inputs => [];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(bool), "") };
+        public TypeNamePair[] Outputs => [new(typeof(bool), "")];
 
-        public INodeComponent[] Components => new INodeComponent[] { new ComboBox() {
+        public INodeComponent[] Components => [ new ComboBox() {
             Items = ["False","True"],
             GetSelection = (IResourceManager resource) => resource.GetData<int>("v"),
             SelectionChanged = (IResourceManager resource, int value) => resource.SetData("v", value),
-        } };
+        } ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
         {
-            return new object[] { resource.GetData<bool?>("v") ?? false };
+            return [resource.GetData<bool?>("v") ?? false];
         }
     }
 }

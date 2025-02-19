@@ -1,7 +1,5 @@
 ﻿using MacroPad.Core.BasePlugin;
 using MacroPad.Shared.Plugin;
-using MacroPad.Shared.Plugin.Protocol;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 
@@ -9,11 +7,11 @@ namespace MacroPad.Core
 {
     public class PluginLoader
     {
-        public static List<IPluginInfos> plugins = new List<IPluginInfos>();
+        public readonly static HashSet<IPluginInfos> plugins = [];
 
-        public static List<IProtocol> protocols = new List<IProtocol>();
-        public static List<NodeType> nodeTypes = DefaultTypes.types;
-        public static List<INodeCategory> nodeCategories = new List<INodeCategory>() { new BranchingCategory(), new ButtonCategory(), new ConditionsCategory(), new ConstantsCategory(), new DebugCategory(), new MathCategory(), new ProfileCategory(), new TextCategory(), new VariableCategory()};
+        public readonly static HashSet<IProtocol> protocols = [];
+        public readonly static HashSet<NodeType> nodeTypes = [..DefaultTypes.types];
+        public readonly static HashSet<INodeCategory> nodeCategories = [new BranchingCategory(), new ButtonCategory(), new ConditionsCategory(), new ConstantsCategory(), new DebugCategory(), new MathCategory(), new ProfileCategory(), new TextCategory(), new VariableCategory()];
 
         public static void LoadPlugins()
         {
@@ -59,14 +57,14 @@ namespace MacroPad.Core
                 if (pluginInfos == null) continue;
 
                 plugins.Add(pluginInfos);
-                if (pluginInfos.Protocols != null) protocols.AddRange(pluginInfos.Protocols);
+                if (pluginInfos.Protocols != null) protocols.UnionWith(pluginInfos.Protocols);
 
-                if (pluginInfos.NodeCategories != null) nodeCategories.AddRange(pluginInfos.NodeCategories);
-                if (pluginInfos.NodeTypes != null) nodeTypes.AddRange(pluginInfos.NodeTypes);
+                if (pluginInfos.NodeCategories != null) nodeCategories.UnionWith(pluginInfos.NodeCategories);
+                if (pluginInfos.NodeTypes != null) nodeTypes.UnionWith(pluginInfos.NodeTypes);
             }
 
-            plugins.Sort((a,b)=>a.Name.CompareTo(b.Name));
-            nodeCategories.Sort((a,b)=>a.Name.CompareTo(b.Name));
+            //plugins.Sort((a,b)=>a.Name.CompareTo(b.Name));
+            //nodeCategories.Sort((a,b)=>a.Name.CompareTo(b.Name));
         }
     }
 }

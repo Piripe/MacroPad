@@ -1,13 +1,7 @@
 ﻿using MacroPad.Core.Config;
 using MacroPad.Core.Device;
 using MacroPad.Shared.Plugin;
-using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core
 {
@@ -15,7 +9,7 @@ namespace MacroPad.Core
     {
         public static MacroPadConfig Config { get; } = MacroPadConfig.LoadConfig();
         public static List<DeviceLayout> Layouts { get; } = DeviceLayout.LoadLayouts();
-        public static List<DeviceCore> ConnectedDevices { get; } = new List<DeviceCore>();
+        public static List<DeviceCore> ConnectedDevices { get; } = [];
         public static DeviceCore? SelectedDevice { get; set; }
 
         public static event EventHandler<DeviceDetectedEventArgs>? DeviceDetected;
@@ -35,7 +29,7 @@ namespace MacroPad.Core
 
                 string? protocolName = protocol.Id;
                 if (protocolName == null) return;
-                if (!Config.PluginsConfig.ContainsKey(protocolName)) Config.PluginsConfig.Add(protocolName, false);
+                Config.PluginsConfig.TryAdd(protocolName, false);
                 if (Config.PluginsConfig[protocolName])
                 {
                     protocol.Enable();
@@ -47,12 +41,12 @@ namespace MacroPad.Core
         {
             Console.WriteLine($"Device detected: {e.Device.Name} ({e.Device.Id})");
 
-            if (!Config.EnabledDevices.ContainsKey(e.Device.Id)) Config.EnabledDevices.Add(e.Device.Id, false);
+            Config.EnabledDevices.TryAdd(e.Device.Id, false);
             if (!Config.DevicesProfiles.ContainsKey(e.Device.Id)) Config.DevicesProfiles.Add(e.Device.Id, new List<DeviceProfile>() { { new DeviceProfile() { Name= "Profile"} } });
-            if (!Config.DefaultProfile.ContainsKey(e.Device.Id)) Config.DefaultProfile.Add(e.Device.Id,0);
+            Config.DefaultProfile.TryAdd(e.Device.Id, 0);
             if (Config.DevicesProfiles[e.Device.Id].Count <= Config.DefaultProfile[e.Device.Id] || Config.DefaultProfile[e.Device.Id] < 0) Config.DefaultProfile[e.Device.Id] = 0;
 
-            DeviceCore device = new DeviceCore(e.Device);
+            DeviceCore device = new(e.Device);
 
             ConnectedDevices.Add(device);
 
@@ -81,7 +75,7 @@ namespace MacroPad.Core
         }
         public static void EnableProtocol(string pluginId)
         {
-            IProtocol? protocol = PluginLoader.protocols.Find((x) => x.Id == pluginId);
+            IProtocol? protocol = PluginLoader.protocols.FirstOrDefault((x) => x.Id == pluginId);
             if (protocol != null)
             {
                 protocol.Enable();
@@ -90,7 +84,7 @@ namespace MacroPad.Core
         }
         public static void DisableProtocol(string pluginId)
         {
-            IProtocol? protocol = PluginLoader.protocols.Find((x) => x.Id == pluginId);
+            IProtocol? protocol = PluginLoader.protocols.FirstOrDefault((x) => x.Id == pluginId);
             if (protocol != null)
             {
                 protocol.Disable();

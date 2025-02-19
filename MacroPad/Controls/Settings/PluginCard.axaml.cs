@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using MacroPad.Shared.Plugin;
 using MacroPad.Core.BasePlugin;
 

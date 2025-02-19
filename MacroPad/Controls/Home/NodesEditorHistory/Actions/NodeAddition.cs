@@ -1,24 +1,12 @@
 ﻿using MacroPad.Core.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
 {
-    public class NodeAddition : IHistoryAction
+    public class NodeAddition(NodeLinks node, int nodeId, NodesEditor editor) : IHistoryAction
     {
-        public NodeLinks Node { get; set; }
-        public int NodeId { get; set; }
-        public NodesEditor Editor { get; set; }
-
-        public NodeAddition(NodeLinks node, int nodeId, NodesEditor editor)
-        {
-            Node = node;
-            NodeId = nodeId;
-            Editor = editor;
-        }
+        public NodeLinks Node { get; set; } = node;
+        public int NodeId { get; set; } = nodeId;
+        public NodesEditor Editor { get; set; } = editor;
 
         public void Do()
         {

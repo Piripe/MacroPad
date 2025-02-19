@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.Versioning;
-using System.Text;
-using System.Threading.Tasks;
 using WindowsShortcutFactory;
 
 namespace MacroPad.Models
@@ -20,7 +16,7 @@ namespace MacroPad.Models
         }
         public static StartupStatus GetAppStartupStatus()
         {
-            StartupStatus status = new StartupStatus();
+            StartupStatus status = new();
             var processPath = Environment.ProcessPath;
             if (processPath == null)
             {
@@ -35,10 +31,8 @@ namespace MacroPad.Models
             if (File.Exists(shortcutAddress))
             {
                 status.OnStartup = true;
-                using (var shortcut = WindowsShortcut.Load(shortcutAddress))
-                {
-                    if (shortcut.Arguments?.Contains("-m") ?? false) status.Minimized = true;
-                }
+                using var shortcut = WindowsShortcut.Load(shortcutAddress);
+                if (shortcut.Arguments?.Contains("-m") ?? false) status.Minimized = true;
             }
 
             return status;

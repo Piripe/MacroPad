@@ -1,24 +1,14 @@
 ﻿using Avalonia;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
 {
-    public class NodeMove : IHistoryAction
+    public class NodeMove(Point from, Point to, int nodeLinksId, NodesEditor editor) : IHistoryAction
     {
-        public Point From { get; set; }
-        public Point To { get; set; }
-        public int NodeLinksId { get; set; }
-        public NodesEditor Editor { get; set; }
-        public NodeMove(Point from, Point to, int nodeLinksId, NodesEditor editor) {
-            From = from;
-            To = to;
-            NodeLinksId = nodeLinksId;
-            Editor = editor;
-        }
+        public Point From { get; set; } = from;
+        public Point To { get; set; } = to;
+        public int NodeLinksId { get; set; } = nodeLinksId;
+        public NodesEditor Editor { get; set; } = editor;
+
         private NodeLinksDisplay? GetNodeLinksDisplay()
         {
             if (NodeLinksId == -1) return Editor.EventStartNodeLink;

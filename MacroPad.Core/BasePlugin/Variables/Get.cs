@@ -1,12 +1,7 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
+using MacroPad.Shared.Plugin.Components;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core.BasePlugin.Variables
 {
@@ -18,20 +13,20 @@ namespace MacroPad.Core.BasePlugin.Variables
 
         public string Id => "Get";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { };
+        public TypeNamePair[] Inputs => [];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(object), "") };
+        public TypeNamePair[] Outputs => [new(typeof(object), "")];
 
-        public INodeComponent[] Components => new INodeComponent[] { new TextBox() {
+        public INodeComponent[] Components => [ new TextBox() {
             GetText = (IResourceManager resource) => resource.GetData<string>("v") ?? "",
             TextChanged = (IResourceManager resource, string text) => resource.SetData("v", text),
-        } };
+        } ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
         {
             string var = resource.GetData<string>("v") ?? "";
-            return new object[] { (DeviceManager.Config.Variables.ContainsKey(var) ? DeviceManager.Config.Variables[var].Value<object>() : null) ?? "" };
+            return [(DeviceManager.Config.Variables.TryGetValue(var, out JToken? value) ? value.Value<object>() : null) ?? ""];
         }
     }
 }

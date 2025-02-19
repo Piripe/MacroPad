@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using MacroPad.Core.BasePlugin.Device;
 using MacroPad.Core.Config;
 using MacroPad.Core.Device;
@@ -12,7 +11,7 @@ namespace MacroPad.Controls.Home;
 public partial class StatusEditor : UserControl
 {
     public DeviceCore Device { get; set; } = new DeviceCore(new BaseDevice());
-    public DeviceLayoutButton Button { get; set; }
+    public DeviceLayoutButton? Button { get; set; }
     public ButtonConfig ButtonConfig { get; set; } = new ButtonConfig();
     public StatusEditor()
     {
@@ -20,10 +19,8 @@ public partial class StatusEditor : UserControl
     }
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        //StatusContainer.Children.Clear();
-        if (Device.Layout != null && Device.Layout.OutputTypes.ContainsKey(Button.Output))
+        if (Device.Layout != null && Button != null && Device.Layout.OutputTypes.TryGetValue(Button.Output, out DeviceOutput? output))
         {
-            DeviceOutput output = Device.Layout.OutputTypes[Button.Output];
             switch (output.OutputType)
             {
                 case OutputType.Palette:

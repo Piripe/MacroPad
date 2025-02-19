@@ -31,19 +31,19 @@ public partial class NodeLinksDisplay : UserControl
     public int LinksId { get; set; }
     public NodesEditor? NodesEditor { get; set; }
     public List<Shape> GetInPoints => _getInPoints;
-    private List<Shape> _getInPoints = new List<Shape>();
+    private List<Shape> _getInPoints = [];
     public List<Shape> GetOutPoints => _getOutPoints;
-    private List<Shape> _getOutPoints = new List<Shape>();
+    private List<Shape> _getOutPoints = [];
     public Shape? RunInPoint => _runInPoint;
     private Shape? _runInPoint;
     public List<Shape> RunOutPoints => _runOutPoints;
-    private List<Shape> _runOutPoints = new List<Shape>();
-    public Dictionary<int, Path?> GetInLines { get; set; } = new Dictionary<int, Path?>();
-    public Dictionary<int, List<Path>> GetOutLines { get; set; } = new Dictionary<int, List<Path>>();
-    public List<Path> RunInLines { get; set; } = new List<Path>();
-    public Dictionary<int, Path?> RunOutLines { get; set; } = new Dictionary<int, Path?>();
+    private List<Shape> _runOutPoints = [];
+    public Dictionary<int, Path?> GetInLines { get; set; } = [];
+    public Dictionary<int, List<Path>> GetOutLines { get; set; } = [];
+    public List<Path> RunInLines { get; set; } = [];
+    public Dictionary<int, Path?> RunOutLines { get; set; } = [];
     public List<StackPanel> GetInComponents => _getInComponents;
-    private List<StackPanel> _getInComponents = new List<StackPanel>();
+    private List<StackPanel> _getInComponents = [];
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -80,9 +80,8 @@ public partial class NodeLinksDisplay : UserControl
             TypeNamePair[] inputs;
             TypeNamePair[] outputs;
             INodeComponent[] components;
-            if (NodeManager.Runners.ContainsKey(links.Id))
+            if (NodeManager.Runners.TryGetValue(links.Id, out INodeRunner? node))
             {
-                INodeRunner node = NodeManager.Runners[links.Id];
                 name = node.Name;
                 inputs = node.Inputs;
                 outputs = node.Outputs;
@@ -94,13 +93,12 @@ public partial class NodeLinksDisplay : UserControl
                     AddNodePoint(null, node.RunnerOutputsName.Length > i ? node.RunnerOutputsName[i] : null, i, true, true);
                 }
             }
-            else if (NodeManager.Getters.ContainsKey(links.Id))
+            else if (NodeManager.Getters.TryGetValue(links.Id, out INodeGetter? node2))
             {
-                INodeGetter node = NodeManager.Getters[links.Id];
-                name = node.Name;
-                inputs = node.Inputs;
-                outputs = node.Outputs;
-                components = node.Components;
+                name = node2.Name;
+                inputs = node2.Inputs;
+                outputs = node2.Outputs;
+                components = node2.Components;
             }
             else { return; }
 
@@ -111,19 +109,19 @@ public partial class NodeLinksDisplay : UserControl
                 AddNodeComponent(component, new NodeResourceManager(x => { throw new Exception("Can't get value of a component."); }, links.Data));
             }
             i = 0;
-            foreach (TypeNamePair node in inputs)
+            foreach (TypeNamePair node3 in inputs)
             {
-                if (NodeManager.Types.ContainsKey(node.Type)) {
-                    INodeComponent[] nodeComponents = NodeManager.Types[node.Type].Components;
-                    if (!links.Consts.ContainsKey(i)) links.Consts.Add(i,new Dictionary<string, JToken>());
+                if (NodeManager.Types.TryGetValue(node3.Type, out Shared.Plugin.NodeType? value)) {
+                    INodeComponent[] nodeComponents = value.Components;
+                    if (!links.Consts.ContainsKey(i)) links.Consts.Add(i,[]);
                 }
-                AddNodePoint(node.Type, node.Name, i, false, data: links.Consts);
+                AddNodePoint(node3.Type, node3.Name, i, false, data: links.Consts);
                 i++;
             }
             i = 0;
-            foreach (TypeNamePair node in outputs)
+            foreach (TypeNamePair node3 in outputs)
             {
-                AddNodePoint(node.Type, node.Name, i, true);
+                AddNodePoint(node3.Type, node3.Name, i, true);
                 i++;
             }
         }
@@ -157,9 +155,8 @@ public partial class NodeLinksDisplay : UserControl
             }
             for (int i = 0; i < GetInPoints.Count; i++)
             {
-                 if (GetInLines.ContainsKey(i))
+                 if (GetInLines.TryGetValue(i, out Path? line))
                  {
-                    Path? line = GetInLines[i];
                     if (line != null)
                     {
                         NodesEditor.LinesData[line].Point1 = GetInPoints[i].TranslatePoint(new Point(6, 6), NodesEditor.DisplayCanvas) ?? new Point(0, 0);
@@ -179,14 +176,14 @@ public partial class NodeLinksDisplay : UserControl
     bool isMoving;
     int moveFromX, moveFromY, moveToX, moveToY;
     Point moveMouseBasePoint;
-    private void NodeTitleBar_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void NodeTitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             var parent = (Canvas?)Parent;
             if (parent != null)
             {
-                if (Links is ButtonEvent buttonEvent)
+                if (Links is ButtonEvent)
                 {
                     if (NodesEditor != null)
                     {
@@ -204,7 +201,7 @@ public partial class NodeLinksDisplay : UserControl
             }
         }
     }
-    private void NodeTitleBar_PointerMoved(object? sender, Avalonia.Input.PointerEventArgs e)
+    private void NodeTitleBar_PointerMoved(object? sender, PointerEventArgs e)
     {
         if (isMoving)
         {
@@ -213,8 +210,8 @@ public partial class NodeLinksDisplay : UserControl
             {
                 Point point = e.GetPosition(parent);
 
-                moveToX = (int)(Math.Round((point.X - moveMouseBasePoint.X) / 32)) + moveFromX;
-                moveToY = (int)(Math.Round((point.Y - moveMouseBasePoint.Y) / 32)) + moveFromY;
+                moveToX = (int)Math.Round((point.X - moveMouseBasePoint.X) / 32) + moveFromX;
+                moveToY = (int)Math.Round((point.Y - moveMouseBasePoint.Y) / 32) + moveFromY;
 
                 MoveNode(moveToX,moveToY);
             }
@@ -224,7 +221,7 @@ public partial class NodeLinksDisplay : UserControl
     {
         bool positionUpdated = false;
 
-        if (Links is ButtonEvent buttonEvent)
+        if (Links is ButtonEvent)
         {
                     if (NodesEditor != null)
                     {
@@ -253,11 +250,11 @@ public partial class NodeLinksDisplay : UserControl
             UpdateLines(x, y);
         }
     }
-    private void NodeTitleBar_PointerReleased(object? sender, Avalonia.Input.PointerReleasedEventArgs e)
+    private void NodeTitleBar_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         if (isMoving)
         {
-            if (NodesEditor != null) NodesEditor.RecordAction(new NodeMove(new Point(moveFromX, moveFromY), new Point(moveToX, moveToY), this.LinksId, NodesEditor));
+            NodesEditor?.RecordAction(new NodeMove(new Point(moveFromX, moveFromY), new Point(moveToX, moveToY), LinksId, NodesEditor));
             isMoving = false;
         }
     }
@@ -301,17 +298,17 @@ public partial class NodeLinksDisplay : UserControl
 
     public DockPanel GetNodeComponent(INodeComponent component, IResourceManager resource, bool smallMode = false)
     {
-        DockPanel dockPanel = new DockPanel()
+        DockPanel dockPanel = new()
         {
             Margin = new Thickness(8, 0, 0, 0),
         };
 
         switch (component)
         {
-            case Shared.Plugin.Nodes.Components.TextBox textBox:
-                TextBox textBoxControl = new TextBox() { Text = textBox.GetText != null ? textBox.GetText(resource) : "" };
+            case Shared.Plugin.Components.TextBox textBox:
+                TextBox textBoxControl = new() { Text = textBox.GetText != null ? textBox.GetText(resource) : "" };
                 textBoxControl.TextChanged += (object? sender, TextChangedEventArgs e) => {
-                    if (textBox.TextChanged != null) textBox.TextChanged(resource, textBoxControl.Text);
+                    textBox.TextChanged?.Invoke(resource, textBoxControl.Text);
                 };
                 textBoxControl.Width = 196;
                 if (smallMode)
@@ -321,15 +318,15 @@ public partial class NodeLinksDisplay : UserControl
                 }
                     dockPanel.Children.Add(textBoxControl);
                 break;
-            case Shared.Plugin.Nodes.Components.NumericUpDown numericUpDown:
-                NumericUpDown numericUpDownControl = new NumericUpDown()
+            case Shared.Plugin.Components.NumericUpDown numericUpDown:
+                NumericUpDown numericUpDownControl = new()
                 {
                     Minimum = numericUpDown.Min,
                     Maximum = numericUpDown.Max,
                     Value = numericUpDown.GetValue != null ? numericUpDown.GetValue(resource) : 0
                 };
                 numericUpDownControl.ValueChanged += (object? sender, NumericUpDownValueChangedEventArgs e) => {
-                    if (numericUpDown.ValueChanged != null) numericUpDown.ValueChanged(resource, numericUpDownControl.Value ?? 0);
+                    numericUpDown.ValueChanged?.Invoke(resource, numericUpDownControl.Value ?? 0);
                 };
                 numericUpDownControl.Width = 196;
                 if (smallMode)
@@ -339,7 +336,7 @@ public partial class NodeLinksDisplay : UserControl
                 }
                 dockPanel.Children.Add(numericUpDownControl);
                 break;
-            case Shared.Plugin.Nodes.Components.ComboBox comboBox:
+            case Shared.Plugin.Components.ComboBox comboBox:
                 ObservableCollection<string> GetItems()
                 {
                     if (comboBox.GetItems != null && NodesEditor?.Button != null && NodesEditor.Device?.Layout != null && NodesEditor.Device.Layout.OutputTypes.TryGetValue(NodesEditor.Button.Output, out DeviceOutput? value))
@@ -377,7 +374,7 @@ public partial class NodeLinksDisplay : UserControl
                 };
 
                 comboBoxControl.SelectionChanged += (object? sender, SelectionChangedEventArgs e) => {
-                    if (comboBox.SelectionChanged != null) comboBox.SelectionChanged(resource, comboBoxControl.SelectedIndex);
+                    comboBox.SelectionChanged?.Invoke(resource, comboBoxControl.SelectedIndex);
                 };
                 comboBoxControl.Width = 196;
                 if (smallMode)
@@ -398,7 +395,7 @@ public partial class NodeLinksDisplay : UserControl
     }
     public void AddNodePoint(Type? type, string? name, int index, bool isOutput, bool isRunner = false, Dictionary<int, Dictionary<string, JToken>>? data = null)
     {
-        DockPanel dockPanel = new DockPanel();
+        DockPanel dockPanel = new();
         Shape linkShape;
         if (isRunner)
         {
@@ -410,7 +407,7 @@ public partial class NodeLinksDisplay : UserControl
         else if (type != null)
         {
             Shared.Media.Color color;
-            if (NodeManager.Types.ContainsKey(type)) color = NodeManager.Types[type].Color;
+            if (NodeManager.Types.TryGetValue(type, out Shared.Plugin.NodeType? value)) color = value.Color;
             else color = new Shared.Media.Color();
             linkShape = new Ellipse() { Fill = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B)) };
         }
@@ -455,14 +452,14 @@ public partial class NodeLinksDisplay : UserControl
 
         if (!isOutput && !isRunner)
         {
-            StackPanel componentsPanel = new StackPanel() { Orientation = Avalonia.Layout.Orientation.Vertical, Spacing = 4};
-            if (type != null && data != null && NodeManager.Types.ContainsKey(type))
+            StackPanel componentsPanel = new() { Orientation = Avalonia.Layout.Orientation.Vertical, Spacing = 4};
+            if (type != null && data != null && NodeManager.Types.TryGetValue(type, out Shared.Plugin.NodeType? value))
             {
-                INodeComponent[] components = NodeManager.Types[type].Components;
+                INodeComponent[] components = value.Components;
                 for (int i = 0; i < components.Length; i++)
                 {
                     INodeComponent component = components[i];
-                    if (!data.ContainsKey(index)) data.Add(index, new Dictionary<string, JToken>());
+                    if (!data.ContainsKey(index)) data.Add(index, []);
 
                     DockPanel componentPanel = GetNodeComponent(component, new NodeResourceManager(x => { throw new Exception("Can't get value of a component."); }, data[index]), true);
                     componentPanel.SetValue(DockPanel.DockProperty, Dock.Right);
@@ -476,7 +473,7 @@ public partial class NodeLinksDisplay : UserControl
         if (isOutput) OutputsContainer.Children.Add(dockPanel);
         else InputsContainer.Children.Add(dockPanel);
     }
-    private void RunOutLinkShape_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void RunOutLinkShape_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         
             if (NodesEditor != null && sender is Shape linkShape && e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
@@ -513,7 +510,7 @@ public partial class NodeLinksDisplay : UserControl
         }
     }
 
-    private void GetOutLinkShape_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void GetOutLinkShape_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (NodesEditor != null && sender is Shape linkShape && e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
         {
@@ -534,7 +531,7 @@ public partial class NodeLinksDisplay : UserControl
         }
     }
 
-    private void RunInLinkShape_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void RunInLinkShape_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (NodesEditor != null && sender is Shape linkShape && e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
         {

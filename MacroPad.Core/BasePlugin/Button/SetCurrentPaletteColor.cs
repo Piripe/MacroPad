@@ -1,11 +1,6 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Button
 {
@@ -17,14 +12,14 @@ namespace MacroPad.Core.BasePlugin.Button
 
         public string Id => "SetCurrentPaletteColor";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[0];
+        public TypeNamePair[] Inputs => [];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[0];
+        public TypeNamePair[] Outputs => [];
 
         public int RunnerOutputCount => 1;
-        public string[] RunnerOutputsName => new string[0];
+        public string[] RunnerOutputsName => [];
 
-        public INodeComponent[] Components => new INodeComponent[] {
+        public INodeComponent[] Components => [
             new ComboBox()
             {
                 GetItems = (IResourceManager resource, IDeviceLayoutButton button, IDeviceOutput output) =>
@@ -40,13 +35,13 @@ namespace MacroPad.Core.BasePlugin.Button
                     resource.SetData("color", selection);
                 }
             }    
-        };
+        ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => output.OutputType == OutputType.Palette;
         public NodeRunnerResult Run(IResourceManager resource)
         {
             if (NodeManager.CurrentButton != null) NodeManager.CurrentDevice?.SetButtonContent(NodeManager.CurrentButton, resource.GetData<int>("color"));
-            return new NodeRunnerResult() { Results = new object[0], RunnerOutputIndex = 0 };
+            return new NodeRunnerResult() { Results = [], RunnerOutputIndex = 0 };
         }
     }
 }

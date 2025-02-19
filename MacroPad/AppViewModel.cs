@@ -1,14 +1,7 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls;
-using MacroPad.ViewModels;
 using MacroPad.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Threading;
 using ReactiveUI;
 using System.Reactive;
 using MacroPad.Core;

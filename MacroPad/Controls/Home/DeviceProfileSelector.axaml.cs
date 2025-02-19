@@ -1,22 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
-using Avalonia.Media;
-using Avalonia.VisualTree;
 using MacroPad.Core.BasePlugin.Device;
 using MacroPad.Core.Device;
 using MacroPad.Pages;
 using System.Linq;
 using System;
-using FluentAvalonia.Core;
-using System.Diagnostics;
 using MacroPad.Core.Config;
-using System.Threading.Tasks;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 using Avalonia.Threading;
@@ -59,7 +50,7 @@ public partial class DeviceProfileSelector : UserControl
         {
             if (_changingProfile) _changingProfile = false;
             else Device.SelectProfile(((ProfileListBoxItemViewModel)DeviceProfileSelectorList.SelectedItem).Index);
-            if (DeviceViewer != null) DeviceViewer.SelectButton(null);
+            DeviceViewer?.SelectButton(null);
         }
     }
 
@@ -75,7 +66,7 @@ public partial class DeviceProfileSelector : UserControl
 
         while (Device.DeviceProfiles.Any(x=>x.Name=="New Profile" + (profileNumber == 1 ? "" : $" {profileNumber}"))) profileNumber++;
 
-        Device.DeviceProfiles.Add(new Core.Config.DeviceProfile() { Name = "New Profile" + (profileNumber == 1 ? "" : $" {profileNumber}") });
+        Device.DeviceProfiles.Add(new DeviceProfile() { Name = "New Profile" + (profileNumber == 1 ? "" : $" {profileNumber}") });
 
         RefreshList();
     }

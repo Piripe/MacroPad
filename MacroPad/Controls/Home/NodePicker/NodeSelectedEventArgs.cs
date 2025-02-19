@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MacroPad.Controls.Home.NodePicker
+﻿namespace MacroPad.Controls.Home.NodePicker
 {
-    public class NodeSelectedEventArgs
+    public class NodeSelectedEventArgs(string id)
     {
-        public string Id {  get; protected set; }
-
-        public NodeSelectedEventArgs(string id)
-        {
-            Id = id;
-        }
+        public string Id { get; } = id;
     }
 }

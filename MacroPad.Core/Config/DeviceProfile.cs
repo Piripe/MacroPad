@@ -1,10 +1,4 @@
-﻿using MacroPad.Core.Device;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace MacroPad.Core.Config
 {
@@ -13,6 +7,6 @@ namespace MacroPad.Core.Config
         public string Name { get; set; } = "";
 
         [JsonProperty("buttons")]
-        public Dictionary<int, Dictionary<int, ButtonConfig>> ButtonsConfig { get; set; } = new Dictionary<int, Dictionary<int, ButtonConfig>>();
+        public Dictionary<int, Dictionary<int, ButtonConfig>> ButtonsConfig { get; set; } = [];
     }
 }

@@ -1,12 +1,6 @@
-﻿using MacroPad.Core.BasePlugin.Text;
-using MacroPad.Shared.Device;
+﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Constants
 {
@@ -18,19 +12,19 @@ namespace MacroPad.Core.BasePlugin.Constants
 
         public string Id => "Text";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[0];
+        public TypeNamePair[] Inputs => [];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(string), "") };
+        public TypeNamePair[] Outputs => [new(typeof(string), "")];
 
-        public INodeComponent[] Components => new INodeComponent[] { new TextBox() {
+        public INodeComponent[] Components => [ new TextBox() {
             GetText = (IResourceManager resource) => resource.GetData<string>("v") ?? "",
             TextChanged = (IResourceManager resource, string text) => resource.SetData("v", text),
-        } };
+        } ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
         {
-            return new object[] { resource.GetData<string>("v") ?? "" };
+            return [resource.GetData<string>("v") ?? ""];
         }
     }
 }

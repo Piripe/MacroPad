@@ -1,17 +1,12 @@
 ﻿using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin
 {
     internal class DefaultTypes
     {
-        public static List<NodeType> types = new List<NodeType>() {
+        public static List<NodeType> types = [
             new NodeType(
                 "Number",
                 new Shared.Media.Color(250, 20, 20),
@@ -62,6 +57,6 @@ namespace MacroPad.Core.BasePlugin
                 load:(r)=>r.GetData<object>("d"),
                 components: []
                 ),
-        };
+        ];
     }
 }

@@ -1,12 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using HarfBuzzSharp;
 using MacroPad.Core;
 using MacroPad.Core.BasePlugin.Device;
 using MacroPad.Core.Device;
-using MacroPad.Pages.Settings;
-using MacroPad.Shared.Plugin;
 
 namespace MacroPad.Controls.Settings;
 

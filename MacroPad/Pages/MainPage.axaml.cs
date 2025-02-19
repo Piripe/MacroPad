@@ -6,7 +6,6 @@ using MacroPad.Core;
 using MacroPad.Core.Config;
 using MacroPad.Core.Device;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MacroPad.Pages;
@@ -66,7 +65,7 @@ public partial class MainPage : UserControl
         ButtonStatusEditorContainer.Children.Clear();
         if (DeviceSelector.SelectedItem is DeviceCore selectedDevice && selectedDevice.CurrentProfile != null && e.Button != null)
         {
-            if (!selectedDevice.CurrentProfile.ButtonsConfig.ContainsKey(e.Button.X)) selectedDevice.CurrentProfile.ButtonsConfig.Add(e.Button.X, new Dictionary<int, ButtonConfig>());
+            if (!selectedDevice.CurrentProfile.ButtonsConfig.ContainsKey(e.Button.X)) selectedDevice.CurrentProfile.ButtonsConfig.Add(e.Button.X, []);
             Dictionary<int, ButtonConfig> buttonColumn = selectedDevice.CurrentProfile.ButtonsConfig[e.Button.X];
             if (!buttonColumn.ContainsKey(e.Button.Y)) buttonColumn.Add(e.Button.Y, new ButtonConfig());
             ButtonConfig buttonConfig = buttonColumn[e.Button.Y];

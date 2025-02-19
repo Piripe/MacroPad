@@ -1,11 +1,6 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Conditions
 {
@@ -17,11 +12,11 @@ namespace MacroPad.Core.BasePlugin.Conditions
 
         public string Id => "Condition";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { new TypeNamePair(typeof(object), ""), new TypeNamePair(typeof(object), "") };
+        public TypeNamePair[] Inputs => [new(typeof(object), ""), new(typeof(object), "")];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(bool), "") };
+        public TypeNamePair[] Outputs => [new(typeof(bool), "")];
 
-        public INodeComponent[] Components => new INodeComponent[] {
+        public INodeComponent[] Components => [
             new ComboBox() {Items = [
                 "Equals",
                 "Not Equals",
@@ -32,7 +27,7 @@ namespace MacroPad.Core.BasePlugin.Conditions
             ],
             GetSelection = (IResourceManager resource) => resource.GetData<int>("o"),
             SelectionChanged = (IResourceManager resource, int index) => resource.SetData("o",index)}
-        };
+        ];
 
         private Func<object, object, bool>[] _operations = [
             (x,y)=>x==y,

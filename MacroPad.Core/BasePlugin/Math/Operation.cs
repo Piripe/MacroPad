@@ -1,11 +1,6 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using MacroPad.Shared.Plugin.Nodes.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin.Math
 {
@@ -17,11 +12,11 @@ namespace MacroPad.Core.BasePlugin.Math
 
         public string Id => "Operation";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { new TypeNamePair(typeof(decimal), ""), new TypeNamePair(typeof(decimal), "") };
+        public TypeNamePair[] Inputs => [new(typeof(decimal), ""), new(typeof(decimal), "")];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(decimal), "") };
+        public TypeNamePair[] Outputs => [new(typeof(decimal), "")];
 
-        public INodeComponent[] Components => new INodeComponent[] {
+        public INodeComponent[] Components => [
             new ComboBox() {Items = [
                 "Add",
                 "Substract",
@@ -33,9 +28,9 @@ namespace MacroPad.Core.BasePlugin.Math
             ],
             GetSelection = (IResourceManager resource) => resource.GetData<int>("o"),
             SelectionChanged = (IResourceManager resource, int index) => resource.SetData("o",index)}
-        };
+        ];
 
-        private Func<decimal, decimal, decimal>[] _operations = new Func<decimal, decimal, decimal>[] {
+        private readonly Func<decimal, decimal, decimal>[] _operations = [
             (x,y)=>x+y,
             (x,y)=>x-y,
             (x,y)=>x*y,
@@ -43,12 +38,12 @@ namespace MacroPad.Core.BasePlugin.Math
             (x,y)=>x%y,
             (x,y)=>(decimal)System.Math.Pow(decimal.ToDouble(x),decimal.ToDouble(y)),
             (x,y)=>(decimal)System.Math.Pow(decimal.ToDouble(x),1/decimal.ToDouble(y)),
-        };
+        ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
         {
-            return new object[] { _operations[resource.GetData<int>("o")]((decimal)resource.GetValue(0), (decimal)resource.GetValue(1)) };
+            return [_operations[resource.GetData<int>("o")]((decimal)resource.GetValue(0), (decimal)resource.GetValue(1))];
         }
     }
 }

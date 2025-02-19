@@ -16,16 +16,16 @@ namespace MacroPad.Core.BasePlugin.Text
 
         public string Id => "Replace";
 
-        public TypeNamePair[] Inputs => new TypeNamePair[] { new TypeNamePair(typeof(string),""), new TypeNamePair(typeof(string), "From"), new TypeNamePair(typeof(string), "To") };
+        public TypeNamePair[] Inputs => [new(typeof(string),""), new(typeof(string), "From"), new(typeof(string), "To")];
 
-        public TypeNamePair[] Outputs => new TypeNamePair[] { new TypeNamePair(typeof(string), "") };
+        public TypeNamePair[] Outputs => [new(typeof(string), "")];
 
-        public INodeComponent[] Components => new INodeComponent[0];
+        public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
         public object[] GetOutputs(IResourceManager resource)
         {
-            return new object[] { ((string)resource.GetValue(0)).Replace((string)resource.GetValue(1), (string)resource.GetValue(2)) };
+            return [((string)resource.GetValue(0)).Replace((string)resource.GetValue(1), (string)resource.GetValue(2))];
         }
     }
 }
