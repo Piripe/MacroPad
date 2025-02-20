@@ -1,6 +1,6 @@
 ﻿using MacroPad.Core.Device;
 
-namespace MacroPad.Controls.Home
+namespace MacroPad.Controls
 {
     public class DeviceViewerButtonPressedEventArgs(DeviceLayoutButton? button)
     {

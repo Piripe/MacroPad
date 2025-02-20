@@ -2,14 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:home="using:MacroPad.Controls.Home"
+			 xmlns:c="using:MacroPad.Controls"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="136"
              x:Class="MacroPad.Controls.Settings.DeviceCard">
 
 	<Border Classes="card" Padding="4">
 		<Panel>
 			<WrapPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-				<home:DeviceViewer x:Name="DeviceIcon" IsEnabled="False" Width="128" Height="128" />
+				<c:DeviceViewer x:Name="DeviceIcon" IsEnabled="False" Width="128" Height="128" />
 				<TextBlock Classes="h5" Margin="8 4 0 0" x:Name="DeviceName" TextWrapping="Wrap"/>
 			</WrapPanel>
 			<CheckBox Content="Enable Device" x:Name="EnableDevice" Margin="0 4 0 0" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>

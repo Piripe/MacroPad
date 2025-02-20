@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using FluentAvalonia.Core;
+using MacroPad.Controls;
 using MacroPad.Controls.Home;
 using MacroPad.Core;
 using MacroPad.Core.Config;
@@ -35,7 +36,7 @@ public partial class MainPage : UserControl
     private void RefreshDeviceSelector()
     {
         object? selectedDevice = DeviceSelector.SelectedItem;
-        DeviceSelector.ItemsSource = DeviceManager.ConnectedDevices.FindAll(x => x.ProtocolDevice.IsConnected);
+        DeviceSelector.ItemsSource = DeviceManager.ConnectedDevices.Where(x => x.ProtocolDevice.IsConnected);
         if (DeviceSelector.ItemsSource.Count() > 0)
         {
             if (DeviceSelector.Items.Contains(selectedDevice)) DeviceSelector.SelectedItem = selectedDevice;

@@ -4,9 +4,9 @@
     <Border Padding="20">
       <!-- Add Controls for Previewer Here -->
 		<StackPanel Spacing="4">
-			<TextBox Classes="small" Text="Coucou"/>
+			<TextBox Classes="small" Text="FooBar"/>
 			<ComboBox Classes="small" Width="128">
-				<ComboBoxItem IsSelected="True">Coucou</ComboBoxItem>
+				<ComboBoxItem IsSelected="True">FooBar</ComboBoxItem>
 			</ComboBox>
 		</StackPanel>
     </Border>
@@ -52,6 +52,13 @@
 	<Style Selector="Border.card">
 		<Setter Property="Padding" Value="16" />
 		<Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
+	</Style>
+	<Style Selector="Border.lightcard">
+		<Setter Property="Padding" Value="16" />
+		<Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
