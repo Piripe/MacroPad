@@ -21,7 +21,7 @@ namespace MacroPad.Core.Device
         public Dictionary<int, DeviceInputEventArgs> ButtonsCurrentValue => _lastValue;
 
 
-        public string Name => Layout==null?ProtocolDevice.Name:Layout.Name;
+        public string Name => Layout?.Name ?? ProtocolDevice.Name;
 
         public DeviceCore(IProtocolDevice protocolDevice)
         {

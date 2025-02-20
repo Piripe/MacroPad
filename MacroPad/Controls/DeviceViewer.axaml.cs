@@ -23,11 +23,17 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using MacroPad.Shared.Device;
 
-namespace MacroPad.Controls.Home;
+namespace MacroPad.Controls;
 
 public partial class DeviceViewer : UserControl
 {
-    public DeviceCore Device { get; set; } = new DeviceCore(new BaseDevice());
+    public static readonly StyledProperty<DeviceCore> DeviceProperty =
+        AvaloniaProperty.Register<DeviceViewer, DeviceCore>(nameof(Device), new DeviceCore(new BaseDevice()));
+    public DeviceCore Device
+    {
+        get => this.GetValue(DeviceProperty);
+        set => SetValue(DeviceProperty, value);
+    }
 
     private Dictionary<int, Grid> _buttons = new Dictionary<int, Grid>();
     private Dictionary<int, Control> _buttonsDisplay = new Dictionary<int, Control>();

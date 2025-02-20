@@ -35,8 +35,8 @@ namespace MacroPad.Core.Device
         }
 
 
-        public static List<DeviceLayout> LoadLayouts() {
-            var layouts = new List<DeviceLayout>();
+        public static HashSet<DeviceLayout> LoadLayouts() {
+            var layouts = new HashSet<DeviceLayout>();
 
             if (Directory.Exists("layouts"))
             {
@@ -57,7 +57,7 @@ namespace MacroPad.Core.Device
 
         public static DeviceLayout? SearchLayout(IProtocolDevice device) {
 
-            return DeviceManager.Layouts.Find((layout) =>
+            return DeviceManager.Layouts.FirstOrDefault((layout) =>
             {
                 if (layout.Protocol != device.Protocol) return false;
                 string input = layout.DetectionMode.HasFlag(DeviceDetectionMode.Name) ? device.Name : device.Id;

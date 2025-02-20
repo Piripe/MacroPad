@@ -14,14 +14,14 @@ public partial class DeviceCard : UserControl
         InitializeComponent();
 
         EnableDevice.IsCheckedChanged += EnableDevice_IsCheckedChanged;
-        DeviceIcon.ZoomAndPan.CornerRadius = new CornerRadius(4);
+        //DeviceIcon.ZoomAndPan.CornerRadius = new CornerRadius(4);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         DeviceName.Text = Device.Name;
         EnableDevice.IsChecked = Device.ProtocolDevice.IsConnected;
-        DeviceIcon.Device = Device;
+        //DeviceIcon.Device = Device;
     }
 
     private void EnableDevice_IsCheckedChanged(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

@@ -8,8 +8,8 @@ namespace MacroPad.Core
     public class DeviceManager
     {
         public static MacroPadConfig Config { get; } = MacroPadConfig.LoadConfig();
-        public static List<DeviceLayout> Layouts { get; } = DeviceLayout.LoadLayouts();
-        public static List<DeviceCore> ConnectedDevices { get; } = [];
+        public static HashSet<DeviceLayout> Layouts { get; } = DeviceLayout.LoadLayouts();
+        public static HashSet<DeviceCore> ConnectedDevices { get; } = [];
         public static DeviceCore? SelectedDevice { get; set; }
 
         public static event EventHandler<DeviceDetectedEventArgs>? DeviceDetected;
@@ -60,7 +60,7 @@ namespace MacroPad.Core
         private static void Protocol_DeviceDisconnected(object? sender, DeviceDetectedEventArgs e)
         {
             Console.WriteLine($"Device disconnected: {e.Device.Name} ({e.Device.Id})");
-            ConnectedDevices.RemoveAll(device=>device.ProtocolDevice == e.Device);
+            ConnectedDevices.RemoveWhere(device=>device.ProtocolDevice == e.Device);
             DeviceDisconnected?.Invoke(sender, e);
         }
 
@@ -94,7 +94,7 @@ namespace MacroPad.Core
 
         public static void EnableDevice(string deviceId)
         {
-            DeviceCore? device = ConnectedDevices.Find((x) => x.ProtocolDevice.Id == deviceId);
+            DeviceCore? device = ConnectedDevices.FirstOrDefault((x) => x.ProtocolDevice.Id == deviceId);
             if (device != null)
             {
                 device.Connect();
@@ -103,7 +103,7 @@ namespace MacroPad.Core
         }
         public static void DisableDevice(string deviceId)
         {
-            DeviceCore? device = ConnectedDevices.Find((x) => x.ProtocolDevice.Id == deviceId);
+            DeviceCore? device = ConnectedDevices.FirstOrDefault((x) => x.ProtocolDevice.Id == deviceId);
             if (device != null)
             {
                 device.Disconnect();
