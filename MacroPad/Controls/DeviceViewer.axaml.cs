@@ -31,7 +31,7 @@ public partial class DeviceViewer : UserControl
         AvaloniaProperty.Register<DeviceViewer, DeviceCore>(nameof(Device), new DeviceCore(new BaseDevice()));
     public DeviceCore Device
     {
-        get => this.GetValue(DeviceProperty);
+        get => GetValue(DeviceProperty);
         set => SetValue(DeviceProperty, value);
     }
 
@@ -51,6 +51,13 @@ public partial class DeviceViewer : UserControl
 
         ZoomAndPan.SizeChanged += ZoomAndPan_SizeChanged;
         ZoomAndPan.ZoomChanged += ZoomAndPan_ZoomChanged;
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == DeviceProperty) LoadDeviceLayout();
     }
 
     private async void ZoomAndPan_SizeChanged(object? sender, SizeChangedEventArgs e)
@@ -106,7 +113,11 @@ public partial class DeviceViewer : UserControl
     //</Slider>
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
+    { 
+        
+    }
+
+    private void LoadDeviceLayout() {
         if (Device.Layout != null)
         {
             DisplayCanvas.Children.Clear();

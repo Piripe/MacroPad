@@ -56,6 +56,13 @@
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
 	</Style>
+	<Style Selector="Border.lightcard">
+		<Setter Property="Padding" Value="16" />
+		<Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
+	</Style>
 	<Style Selector="Border.card-separator">
 		<Setter Property="Background" Value="{DynamicResource ButtonBorderBrush}" />
 		<Setter Property="Margin" Value="-12 15" />

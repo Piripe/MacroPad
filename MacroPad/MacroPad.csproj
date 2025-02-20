@@ -42,5 +42,13 @@
     <Compile Update="Controls\Home\NodeLinksDisplay.axaml.cs">
       <DependentUpon>NodeLinksDisplay.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainEditor.axaml.cs">
+      <DependentUpon>MainEditor.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Views\Editor\" />
   </ItemGroup>
 </Project>
