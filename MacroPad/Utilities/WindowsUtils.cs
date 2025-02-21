@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Versioning;
 using WindowsShortcutFactory;
 
-namespace MacroPad.Models
+namespace MacroPad.Utilities
 {
     [SupportedOSPlatform("windows")]
     internal static class WindowsUtils

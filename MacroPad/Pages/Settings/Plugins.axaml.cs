@@ -11,7 +11,7 @@ public partial class Plugins : UserControl
 {
     public Plugins()
     {
-        DataContext = new GeneralViewModel();
+        DataContext = new GeneralViewModel2();
         InitializeComponent();
     }
 

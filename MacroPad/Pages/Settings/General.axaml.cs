@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using MacroPad.Models;
+using MacroPad.Utilities;
 using System;
 using System.Runtime.Versioning;
 

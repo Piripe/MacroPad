@@ -45,6 +45,9 @@
     <Compile Update="Views\MainEditor.axaml.cs">
       <DependentUpon>MainEditor.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainSettings.axaml.cs">
+      <DependentUpon>MainSettings.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 

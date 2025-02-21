@@ -22,7 +22,7 @@
 			<ColumnDefinition Width="4"/>
 			<ColumnDefinition Width="4*"/>
 		</Grid.ColumnDefinitions>
-		<Border Classes="card" Padding="4">
+		<Border Classes="card" Padding="4" IsVisible="{CompiledBinding !Settings.Openend}">
 			<Grid RowDefinitions="*,32">
 				<ScrollViewer>
 					<ListBox ItemsSource="{CompiledBinding DevicesInNav}" SelectionChanged="ListBox_SelectionChanged">
@@ -49,7 +49,7 @@
 						</ListBox.ItemTemplate>
 					</ListBox>
 				</ScrollViewer>
-				<Button Theme="{StaticResource TransparentButton}" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Width="32" Height="32" Padding="0" ><ui:SymbolIcon Symbol="Settings" FontSize="16"/></Button>
+				<Button Command="{CompiledBinding Settings.Open}" Theme="{StaticResource TransparentButton}" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Width="32" Height="32" Padding="0" ><ui:SymbolIcon Symbol="Settings" FontSize="16"/></Button>
 			</Grid>
 		</Border>
 		<Border x:Name="deviceEditorView" Classes="lightcard" Padding="0" Grid.Column="2">
@@ -57,6 +57,8 @@
 				<TextBlock HorizontalAlignment="Center" Classes="h4">Select a device first</TextBlock>
 			</StackPanel>
 		</Border>
+
+		<views:MainSettings DataContext="{CompiledBinding Settings}" IsVisible="{CompiledBinding Openend}" Grid.ColumnSpan="3" Background="{DynamicResource ApplicationPageBackgroundThemeBrush}"/>
 	</Grid>
 
 </Window>

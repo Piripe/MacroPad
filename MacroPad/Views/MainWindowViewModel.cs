@@ -3,6 +3,7 @@ using MacroPad.Core;
 using MacroPad.Core.Device;
 using MacroPad.ViewModels;
 using MacroPad.Views.Navigation;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace MacroPad.Views
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly Dictionary<DeviceCore, MainEditorViewModel> _deviceEditors = [];
+
+        public MainSettingsViewModel Settings { get; } = new();
         public MainWindowViewModel() {
             DeviceManager.DeviceDetected += DeviceManager_DeviceDetected;
             DeviceManager.DeviceDisconnected += DeviceManager_DeviceDisconnected;
