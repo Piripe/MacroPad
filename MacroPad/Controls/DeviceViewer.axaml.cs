@@ -56,8 +56,15 @@ public partial class DeviceViewer : UserControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-
-        if (change.Property == DeviceProperty) LoadDeviceLayout();
+        
+        if (change.Property == DeviceProperty) {
+            DeviceCore? oldDevice = change.OldValue as DeviceCore;
+            if (oldDevice != null) {
+                oldDevice.Input -= Device_Input;
+                oldDevice.OutputSet -= Device_OutputSet;
+            }
+            LoadDeviceLayout();
+        }
     }
 
     private async void ZoomAndPan_SizeChanged(object? sender, SizeChangedEventArgs e)
@@ -350,7 +357,7 @@ public partial class DeviceViewer : UserControl
     {
         if (_buttons.ContainsKey(e.Button.Id))
         {
-            SetButtonDisplay(_buttons[e.Button.Id], _buttonsDisplay[e.Button.Id], e.Button, e.Value);
+            Dispatcher.UIThread.Invoke(()=> SetButtonDisplay(_buttons[e.Button.Id], _buttonsDisplay[e.Button.Id], e.Button, e.Value));
         }
     }
 
