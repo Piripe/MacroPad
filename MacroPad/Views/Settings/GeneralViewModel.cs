@@ -2,10 +2,6 @@
 using MacroPad.ViewModels;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Views.Settings
 {
@@ -24,7 +20,7 @@ namespace MacroPad.Views.Settings
                 RunStartup = status.OnStartup;
                 RunMin = status.Minimized;
             }
-            this.PropertyChanged += GeneralViewModel_PropertyChanged;
+            PropertyChanged += GeneralViewModel_PropertyChanged;
         }
 
         private void GeneralViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -13,6 +13,9 @@ namespace MacroPad.Core
         public readonly static HashSet<NodeType> nodeTypes = [..DefaultTypes.types];
         public readonly static HashSet<INodeCategory> nodeCategories = [new BranchingCategory(), new ButtonCategory(), new ConditionsCategory(), new ConstantsCategory(), new DebugCategory(), new MathCategory(), new ProfileCategory(), new TextCategory(), new VariableCategory()];
 
+        public static event EventHandler<IPluginInfos>? PluginAdded;
+        public static event EventHandler<IPluginInfos>? PluginRemoved;
+
         public static void LoadPlugins()
         {
             if (!Directory.Exists("plugins")) return;
@@ -61,6 +64,7 @@ namespace MacroPad.Core
 
                 if (pluginInfos.NodeCategories != null) nodeCategories.UnionWith(pluginInfos.NodeCategories);
                 if (pluginInfos.NodeTypes != null) nodeTypes.UnionWith(pluginInfos.NodeTypes);
+                PluginAdded?.Invoke(null, pluginInfos);
             }
 
             //plugins.Sort((a,b)=>a.Name.CompareTo(b.Name));

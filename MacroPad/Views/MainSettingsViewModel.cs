@@ -21,6 +21,6 @@ namespace MacroPad.Views
         public void Open() => Openend = true;
         public void Close() => Openend = false;
 
-        public static StyledElement[] SettingsCategories { get; } = [new General() { DataContext = new GeneralViewModel()}];
+        public static StyledElement[] SettingsCategories { get; } = [new General() { DataContext = new GeneralViewModel()}, new Plugins() { DataContext = new PluginsViewModel()}];
     }
 }

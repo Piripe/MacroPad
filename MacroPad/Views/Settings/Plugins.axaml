@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:local="using:MacroPad.Views.Settings"
+			 xmlns:set="using:MacroPad.Controls.Settings"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MacroPad.Views.Settings.Plugins"
+			 x:DataType="local:PluginsViewModel">
+
+	<StackPanel Margin="8" MaxWidth="512" HorizontalAlignment="Left" Orientation="Vertical" Spacing="2">
+		<TextBlock Text="Plugins" Classes="h4" FontWeight="SemiBold" Width="512" Margin="0 0 0 8" HorizontalAlignment="Left" />
+
+		<ItemsControl ItemsSource="{CompiledBinding Plugins}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<set:PluginRow DataContext="{Binding}" Margin="0 0 0 6"/>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</StackPanel>
+</UserControl>
