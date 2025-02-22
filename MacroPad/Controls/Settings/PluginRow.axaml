@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:local="using:MacroPad.Controls.Settings"
 			 xmlns:icons="using:FluentIcons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="512" d:DesignHeight="112"
+             mc:Ignorable="d" d:DesignWidth="768" d:DesignHeight="112"
              x:Class="MacroPad.Controls.Settings.PluginRow"
 			 x:DataType="local:PluginRowViewModel">
 
@@ -13,21 +13,21 @@
 	</Design.DataContext>
 	
 	<Border Classes="card" Padding="8">
-		<Grid ColumnDefinitions="96,*">
+		<Grid ColumnDefinitions="96,*,Auto">
 			<icons:SymbolIcon Symbol="" FontSize="96" VerticalAlignment="Top"/>
 			<StackPanel Grid.Column="1">
 				<TextBlock Classes="h4" Text="{CompiledBinding Plugin.Name}"/>
-				<TextBlock Text="{CompiledBinding Plugin.Description}"/>
+				<TextBlock Text="{CompiledBinding Plugin.Description}" TextWrapping="Wrap"/>
 			</StackPanel>
-			<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Bottom" Spacing="4">
-				<Button Width="36" Padding="0">
+			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Bottom" Spacing="4">
+				<Button Width="36" Padding="0" ToolTip.Tip="Reload">
 					<icons:SymbolIcon Symbol="ArrowClockwise"/>
 				</Button>
-				<Button Width="36" Padding="0">
+				<Button Width="36" Padding="0" ToolTip.Tip="Settings">
 					<icons:SymbolIcon Symbol="Settings"/>
 				</Button>
 			</StackPanel>
-			<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Top" Spacing="4">
+			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Top" Spacing="4">
 				<TextBlock Text="Enable"/>
 				<ToggleSwitch Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" OffContent="" OnContent="" Padding="0" Margin="4 -14 -8 0"/>
 			</StackPanel>

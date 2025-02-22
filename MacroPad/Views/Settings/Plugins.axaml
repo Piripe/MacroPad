@@ -8,8 +8,8 @@
              x:Class="MacroPad.Views.Settings.Plugins"
 			 x:DataType="local:PluginsViewModel">
 
-	<StackPanel Margin="8" MaxWidth="512" HorizontalAlignment="Left" Orientation="Vertical" Spacing="2">
-		<TextBlock Text="Plugins" Classes="h4" FontWeight="SemiBold" Width="512" Margin="0 0 0 8" HorizontalAlignment="Left" />
+	<StackPanel Margin="8" MaxWidth="768" HorizontalAlignment="Left" Orientation="Vertical" Spacing="2">
+		<TextBlock Text="Plugins" Classes="h4" FontWeight="SemiBold" Width="768" Margin="0 0 0 8" HorizontalAlignment="Left" />
 
 		<ItemsControl ItemsSource="{CompiledBinding Plugins}">
 			<ItemsControl.ItemTemplate>

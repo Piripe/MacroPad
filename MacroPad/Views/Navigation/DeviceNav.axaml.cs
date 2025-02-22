@@ -10,7 +10,6 @@ public partial class DeviceNav : UserControl
     public DeviceNav()
     {
         InitializeComponent();
-        enableTextBlock.TextTrimming = new TextTrailingTrimming(" ", true);
         deviceViewer.ZoomAndPan.Background = Brushes.Transparent;
     }
 }
