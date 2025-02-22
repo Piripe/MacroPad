@@ -2,6 +2,7 @@
 using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
 using Newtonsoft.Json.Linq;
+using MacroPad.Shared.Plugin;
 
 namespace MacroPad.Core.BasePlugin.Variables
 {
@@ -23,7 +24,7 @@ namespace MacroPad.Core.BasePlugin.Variables
         } ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
             string var = resource.GetData<string>("v") ?? "";
             return [(DeviceManager.Config.Variables.TryGetValue(var, out JToken? value) ? value.Value<object>() : null) ?? ""];

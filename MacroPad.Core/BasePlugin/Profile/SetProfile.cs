@@ -2,6 +2,7 @@
 using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
+using MacroPad.Shared.Plugin;
 
 namespace MacroPad.Core.BasePlugin.Profile
 {
@@ -33,7 +34,7 @@ namespace MacroPad.Core.BasePlugin.Profile
 
         public INodeComponent[] Components => [
             new ComboBox() {
-                GetItems = (IResourceManager resource, IDeviceLayoutButton button, IDeviceOutput output) =>
+                GetItems = (IResourceManager resource) =>
                 {
                     return DeviceManager.SelectedDevice?.DeviceProfiles.Select(x=>x.Name).ToArray() ?? [];
                 },
@@ -47,7 +48,7 @@ namespace MacroPad.Core.BasePlugin.Profile
         ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public NodeRunnerResult Run(IResourceManager resource)
+        public NodeRunnerResult Run(INodeResourceManager resource)
         {
             if (NodeManager.CurrentDevice != null) NodeManager.CurrentDevice.SelectProfile(GetProfileIndex(NodeManager.CurrentDevice, resource));
             return new NodeRunnerResult() { Results = [], RunnerOutputIndex = 0 };

@@ -1,6 +1,8 @@
-﻿namespace MacroPad.Shared.Plugin.Settings
+﻿using MacroPad.Shared.Plugin.Components;
+
+namespace MacroPad.Shared.Plugin.Settings
 {
-    public interface ISettingsComponent
+    public interface ISettingsComponent : IComponent
     {
     }
 }

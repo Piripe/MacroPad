@@ -1,10 +1,5 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MacroPad.Core.BasePlugin.Text
 {
@@ -23,7 +18,7 @@ namespace MacroPad.Core.BasePlugin.Text
         public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
             return [string.Concat(resource.GetValue(0), resource.GetValue(1))];
         }

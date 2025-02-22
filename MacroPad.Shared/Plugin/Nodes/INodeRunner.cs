@@ -16,7 +16,7 @@ namespace MacroPad.Shared.Plugin.Nodes
 
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output);
-        public NodeRunnerResult Run(IResourceManager resource);
+        public NodeRunnerResult Run(INodeResourceManager resource);
 
     }
 }

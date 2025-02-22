@@ -71,7 +71,7 @@ namespace MacroPad.Core
                         return type.DefaultValue;
                     }
 
-                    NodeRunnerResult result = nodeRunner.Run(new NodeResourceManager(GetValue, links.Data));
+                    NodeRunnerResult result = nodeRunner.Run(new NodeResourceManager(links.Data, GetValue));
 
                     if (cache.ContainsKey(linksId)) cache[linksId] = result.Results;
                     else cache.Add(linksId, result.Results);
@@ -109,7 +109,7 @@ namespace MacroPad.Core
                         return type.DefaultValue;
                     }
 
-                    object[] result = nodeGetter.GetOutputs(new NodeResourceManager(GetValue, links.Data));
+                    object[] result = nodeGetter.GetOutputs(new NodeResourceManager(links.Data, GetValue));
 
                     if (!cache.TryAdd(linksId, result)) cache[linksId] = result;
                     if (index < result.Length) return result[index];
@@ -120,7 +120,7 @@ namespace MacroPad.Core
             object? GetConst(Dictionary<int,Dictionary<string, JToken>> consts, NodeType type, int index)
             {
                 if (!consts.TryGetValue(index, out Dictionary<string, JToken>? data)) return null;
-                return type.Load != null ? type.Load(new NodeResourceManager((i) => throw new Exception("Can't get value of a type"), data)) : null;
+                return type.Load != null ? type.Load(new ResourceManager(data)) : null;
             }
 
 

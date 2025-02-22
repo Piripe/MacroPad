@@ -1,6 +1,7 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
+using MacroPad.Shared.Plugin;
 
 namespace MacroPad.Core.BasePlugin.Conditions
 {
@@ -41,7 +42,7 @@ namespace MacroPad.Core.BasePlugin.Conditions
         private static decimal ObjectToDecimal(object x) => (decimal.TryParse(x.ToString(), out decimal val) ? val : 0m);
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
             return [ _operations[resource.GetData<int>("o")](resource.GetValue(0), resource.GetValue(1)) ];
         }

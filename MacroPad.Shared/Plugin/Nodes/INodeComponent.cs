@@ -1,6 +1,8 @@
-﻿namespace MacroPad.Shared.Plugin.Nodes
+﻿using MacroPad.Shared.Plugin.Components;
+
+namespace MacroPad.Shared.Plugin.Nodes
 {
-    public interface INodeComponent
+    public interface INodeComponent : IComponent
     {
     }
 }
