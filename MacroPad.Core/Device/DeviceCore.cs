@@ -1,7 +1,7 @@
-﻿using MacroPad.Core.Config;
-using MacroPad.Shared.Plugin.Protocol;
+﻿using MacroPad.Shared.Plugin.Protocol;
 using Newtonsoft.Json.Linq;
 using MacroPad.Shared.Device;
+using MacroPad.Core.Models.Config;
 
 namespace MacroPad.Core.Device
 {

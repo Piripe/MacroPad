@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using MacroPad.Core.Models.Config;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MacroPad.Core.Config
+namespace MacroPad.Core.Models
 {
     public class MacroPadConfig
     {
@@ -23,13 +24,13 @@ namespace MacroPad.Core.Config
             if (File.Exists("config.json"))
             {
                 MacroPadConfig? config = JsonConvert.DeserializeObject<MacroPadConfig>(File.ReadAllText("config.json"));
-                if (config != null ) return config;
+                if (config != null) return config;
             }
             return new MacroPadConfig();
         }
         public void SaveConfig()
         {
-            File.WriteAllText("config.json", JsonConvert.SerializeObject(this,Formatting.None));
+            File.WriteAllText("config.json", JsonConvert.SerializeObject(this, Formatting.None));
         }
     }
 }

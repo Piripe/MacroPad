@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace MacroPad.Core.Config
+namespace MacroPad.Core.Models.Config
 {
-    public class DeviceProfile { 
+    public class DeviceProfile
+    {
         [JsonProperty("name")]
         public string Name { get; set; } = "";
 

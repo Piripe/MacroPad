@@ -1,6 +1,7 @@
 ﻿
 using MacroPad.Core;
 using MacroPad.Core.Device;
+using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Protocol;
 using System.Reflection;

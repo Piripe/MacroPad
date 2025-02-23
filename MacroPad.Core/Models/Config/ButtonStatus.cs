@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MacroPad.Core.Config
+namespace MacroPad.Core.Models.Config
 {
     public class ButtonStatus
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace MacroPad.Core.Config
+namespace MacroPad.Core.Models.Config
 {
     public class NodeScript
     {
@@ -9,7 +9,7 @@ namespace MacroPad.Core.Config
         [JsonProperty("y")]
         public int StartY { get; set; }
         [JsonProperty("links")]
-        public Dictionary<int,NodeLinks> NodesLinks { get; set; } = [];
+        public Dictionary<int, NodeLinks> NodesLinks { get; set; } = [];
         [JsonProperty("lines")]
         public Dictionary<int, NodeLine> NodeLines { get; set; } = [];
     }

@@ -8,7 +8,7 @@ using System;
 using Avalonia.Media;
 using MacroPad.Core.Device;
 using MacroPad.Core.BasePlugin.Device;
-using MacroPad.Core.Config;
+using MacroPad.Core.Models.Config;
 
 namespace MacroPad.Controls.Home.StatusEditorTypes;
 

@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using MacroPad.Controls.Settings;
-using MacroPad.Core;
+using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.ViewModels;
 

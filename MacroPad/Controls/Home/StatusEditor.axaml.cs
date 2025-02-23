@@ -1,8 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using MacroPad.Core.BasePlugin.Device;
-using MacroPad.Core.Config;
 using MacroPad.Core.Device;
+using MacroPad.Core.Models.Config;
 using MacroPad.Shared.Device;
 using Newtonsoft.Json.Linq;
 

@@ -1,4 +1,5 @@
 ﻿using MacroPad.Core;
+using MacroPad.Core.Plugin;
 
 namespace MacroPad.ViewModels
 {

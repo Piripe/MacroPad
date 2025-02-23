@@ -1,7 +1,7 @@
 ﻿using MacroPad.Core.Device;
 using Newtonsoft.Json;
 
-namespace MacroPad.Core.Config
+namespace MacroPad.Core.Models.Config
 {
     public class ButtonConfig
     {

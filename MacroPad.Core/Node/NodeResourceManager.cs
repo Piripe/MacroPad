@@ -1,4 +1,5 @@
-﻿using MacroPad.Shared.Plugin.Nodes;
+﻿using MacroPad.Core.Models;
+using MacroPad.Shared.Plugin.Nodes;
 using Newtonsoft.Json.Linq;
 
 namespace MacroPad.Core.Node

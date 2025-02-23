@@ -7,10 +7,10 @@ using MacroPad.Core.Device;
 using MacroPad.Pages;
 using System.Linq;
 using System;
-using MacroPad.Core.Config;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 using Avalonia.Threading;
+using MacroPad.Core.Models.Config;
 
 namespace MacroPad.Controls.Home;
 

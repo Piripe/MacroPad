@@ -1,7 +1,7 @@
 ﻿using MacroPad.Shared.Plugin;
 using Newtonsoft.Json.Linq;
 
-namespace MacroPad.Core
+namespace MacroPad.Core.Models
 {
     public class ResourceManager(Dictionary<string, JToken> data, Dictionary<VirtualDataKey, object?>? virtualData = null) : IResourceManager
     {

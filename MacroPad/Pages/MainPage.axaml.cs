@@ -4,8 +4,8 @@ using FluentAvalonia.Core;
 using MacroPad.Controls;
 using MacroPad.Controls.Home;
 using MacroPad.Core;
-using MacroPad.Core.Config;
 using MacroPad.Core.Device;
+using MacroPad.Core.Models.Config;
 using System.Collections.Generic;
 using System.Linq;
 

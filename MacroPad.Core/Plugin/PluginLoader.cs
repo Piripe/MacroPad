@@ -3,14 +3,14 @@ using MacroPad.Shared.Plugin;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 
-namespace MacroPad.Core
+namespace MacroPad.Core.Plugin
 {
     public class PluginLoader
     {
         public readonly static HashSet<IPluginInfos> plugins = [];
 
         public readonly static HashSet<IProtocol> protocols = [];
-        public readonly static HashSet<NodeType> nodeTypes = [..DefaultTypes.types];
+        public readonly static HashSet<NodeType> nodeTypes = [.. DefaultTypes.types];
         public readonly static HashSet<INodeCategory> nodeCategories = [new BranchingCategory(), new ButtonCategory(), new ConditionsCategory(), new ConstantsCategory(), new DebugCategory(), new MathCategory(), new ProfileCategory(), new TextCategory(), new VariableCategory()];
 
         public static event EventHandler<IPluginInfos>? PluginAdded;
@@ -23,7 +23,7 @@ namespace MacroPad.Core
 
             foreach (var pluginDir in pluginDirs)
             {
-                string pluginJsonFile = Path.Combine(pluginDir,"plugin.json");
+                string pluginJsonFile = Path.Combine(pluginDir, "plugin.json");
 
                 if (!File.Exists(pluginJsonFile)) continue;
 
@@ -41,13 +41,14 @@ namespace MacroPad.Core
                 try
                 {
                     assembly = pluginLoader.LoadDefaultAssembly();
-                } catch
+                }
+                catch
                 {
                     throw new Exception("Failed to load plugin assembly");
                 }
 
-                
-                Type? pluginInfosType = assembly.GetTypes().ToList().Find((Type type) => type.Name == "PluginInfos");
+
+                Type? pluginInfosType = assembly.GetTypes().ToList().Find((type) => type.Name == "PluginInfos");
 
                 if (pluginInfosType == null) continue;
 

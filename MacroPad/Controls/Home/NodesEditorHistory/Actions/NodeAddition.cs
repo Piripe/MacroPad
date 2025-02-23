@@ -1,4 +1,4 @@
-﻿using MacroPad.Core.Config;
+﻿using MacroPad.Core.Models.Config;
 
 namespace MacroPad.Controls.Home.NodesEditorHistory.Actions
 {

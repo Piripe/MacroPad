@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MacroPad.Core.Config
+namespace MacroPad.Core.Models.Config
 {
     public class NodeLinks
     {
         [JsonProperty("id")]
         public string Id { get; set; } = "";
         [JsonProperty("g")]
-        public Dictionary<int,int> Getters { get; set; } = [];
+        public Dictionary<int, int> Getters { get; set; } = [];
         [JsonProperty("r")]
         public Dictionary<int, int> Runners { get; set; } = [];
         [JsonProperty("x")]

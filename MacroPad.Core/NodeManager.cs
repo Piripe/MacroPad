@@ -1,6 +1,8 @@
-﻿using MacroPad.Core.Config;
-using MacroPad.Core.Device;
+﻿using MacroPad.Core.Device;
+using MacroPad.Core.Models;
+using MacroPad.Core.Models.Config;
 using MacroPad.Core.Node;
+using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
 using Newtonsoft.Json.Linq;
