@@ -6,16 +6,19 @@ using Avalonia.Media;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
 using MacroPad.Core;
 using MacroPad.Core.Device;
+using MacroPad.Core.Models;
 using MacroPad.Core.Models.Config;
 using MacroPad.Core.Node;
+using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Controls.Home;
 
@@ -312,7 +315,7 @@ public partial class NodeLinksDisplay : UserControl
     {
         InputsContainer.Children.Add(GetNodeComponent(component, resource));
     }
-    public void AddNodePoint(Type? type, string? name, int index, bool isOutput, bool isRunner = false, Dictionary<int, Dictionary<string, JToken>>? data = null)
+    public void AddNodePoint(Type? type, string? name, int index, bool isOutput, bool isRunner = false, Dictionary<int, Dictionary<string, JsonValue>>? data = null)
     {
         DockPanel dockPanel = new();
         Shape linkShape;

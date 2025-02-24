@@ -1,17 +1,17 @@
 ﻿using MacroPad.Shared.Device;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Device
 {
     public class PaletteValue : IPaletteValue
     {
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public int Value { get; set; }
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; } = "";
-        [JsonProperty("color")]
+        [JsonPropertyName("color")]
         public uint Color { get; set; }
-        [JsonProperty("image")]
+        [JsonPropertyName("image")]
         public string? Image { get; set; }
     }
 }

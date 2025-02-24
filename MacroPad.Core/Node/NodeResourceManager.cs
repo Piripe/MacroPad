@@ -1,6 +1,6 @@
 ﻿using MacroPad.Core.Models;
 using MacroPad.Shared.Plugin.Nodes;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Core.Node
 {
@@ -13,7 +13,7 @@ namespace MacroPad.Core.Node
             return _getValue(index);
         }
 
-        public NodeResourceManager(Dictionary<string, JToken> data, Func<int, object> getValue) : base(data) { 
+        public NodeResourceManager(Dictionary<string, JsonValue> data, Func<int, object> getValue) : base(data) { 
             _getValue = getValue;
         }
     }

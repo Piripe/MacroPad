@@ -1,8 +1,8 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
-using Newtonsoft.Json.Linq;
 using MacroPad.Shared.Plugin;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Core.BasePlugin.Variables
 {
@@ -27,7 +27,7 @@ namespace MacroPad.Core.BasePlugin.Variables
         public object[] GetOutputs(INodeResourceManager resource)
         {
             string var = resource.GetData<string>("v") ?? "";
-            return [(DeviceManager.Config.Variables.TryGetValue(var, out JToken? value) ? value.Value<object>() : null) ?? ""];
+            return [(DeviceManager.Config.Variables.TryGetValue(var, out JsonValue? value) ? value.TryGetValue(out object? value2) ? value2 : null : null) ?? ""];
         }
     }
 }

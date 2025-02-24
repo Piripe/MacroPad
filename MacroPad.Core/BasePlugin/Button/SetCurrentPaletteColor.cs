@@ -25,6 +25,7 @@ namespace MacroPad.Core.BasePlugin.Button
             {
                 GetItems = (IResourceManager resource) =>
                 {
+                    System.Diagnostics.Debug.WriteLine(resource.GetVirtual<IDeviceOutput>(VirtualDataKey.DeviceOutput));
                     return resource.GetVirtual<IDeviceOutput>(VirtualDataKey.DeviceOutput)?.Palette.Select(x=>x.Name).ToArray() ?? [];
                 },
                 GetSelection = (IResourceManager resource) =>

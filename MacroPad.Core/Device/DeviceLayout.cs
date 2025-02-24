@@ -1,30 +1,31 @@
 ﻿using MacroPad.Shared.Plugin.Protocol;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace MacroPad.Core.Device
 {
     public class DeviceLayout
     {
-        [JsonProperty("detectionMode")]
+        [JsonPropertyName("detectionMode")]
         public DeviceDetectionMode DetectionMode { get; set; } = DeviceDetectionMode.Name | DeviceDetectionMode.Equal;
-        [JsonProperty("detectionValue")]
+        [JsonPropertyName("detectionValue")]
         public string DetectionValue { get; set; } = "";
-        [JsonProperty("protocol")]
+        [JsonPropertyName("protocol")]
         public string Protocol { get; set; } = "";
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; } = "";
-        [JsonProperty("outputs")]
+        [JsonPropertyName("outputs")]
         public Dictionary<string, DeviceOutput> OutputTypes { get; set; } = [];
-        [JsonProperty("buttons")]
+        [JsonPropertyName("buttons")]
         public DeviceLayoutButton[] Buttons { get; set; } = [];
-        [JsonProperty("assets")]
+        [JsonPropertyName("assets")]
         public string AssetsFolder { get; set; } = "";
-        [JsonProperty("width")]
+        [JsonPropertyName("width")]
         public int DWidth { get; set; }
-        [JsonProperty("height")]
+        [JsonPropertyName("height")]
         public int DHeight { get; set; }
-        [JsonProperty("image")]
+        [JsonPropertyName("image")]
         public string? DImage { get; set; }
         private string _layoutPath = "";
 
@@ -43,7 +44,7 @@ namespace MacroPad.Core.Device
                 IEnumerable<string> layoutFiles = Directory.EnumerateFiles("layouts", "*.layout.json", SearchOption.AllDirectories);
                 foreach (string layoutFile in layoutFiles)
                 {
-                    var layout = JsonConvert.DeserializeObject<DeviceLayout>(File.ReadAllText(layoutFile));
+                    var layout = JsonSerializer.Deserialize<DeviceLayout>(File.ReadAllText(layoutFile));
                     if (layout != null)
                     {
                         layout.SetLayoutPath(Path.GetDirectoryName(layoutFile)??"");
@@ -60,7 +61,7 @@ namespace MacroPad.Core.Device
             return DeviceManager.Layouts.FirstOrDefault((layout) =>
             {
                 if (layout.Protocol != device.Protocol) return false;
-                string input = layout.DetectionMode.HasFlag(DeviceDetectionMode.Name) ? device.Name : device.Id;
+                string input = layout.DetectionMode.HasFlag(DeviceDetectionMode.ID) ? device.Id : device.Name;
 
                 if (layout.DetectionMode.HasFlag(DeviceDetectionMode.Equal)) return input == layout.DetectionValue;
                 if (layout.DetectionMode.HasFlag(DeviceDetectionMode.Contains)) return input.Contains(layout.DetectionValue);

@@ -1,13 +1,13 @@
 ﻿using MacroPad.Core.Device;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Models.Config
 {
     public class ButtonConfig
     {
-        [JsonProperty("events")]
+        [JsonPropertyName("events")]
         public Dictionary<ButtonEvent, NodeScript> EventScripts { get; set; } = [];
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public ButtonStatus Status { get; set; } = new ButtonStatus();
     }
 }

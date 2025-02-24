@@ -19,7 +19,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Newtonsoft.Json.Linq;
 using System.IO;
 using MacroPad.Shared.Device;
 
@@ -124,7 +123,8 @@ public partial class DeviceViewer : UserControl
         
     }
 
-    private void LoadDeviceLayout() {
+    private void LoadDeviceLayout()
+    {
         if (Device.Layout != null)
         {
             DisplayCanvas.Children.Clear();
@@ -147,12 +147,8 @@ public partial class DeviceViewer : UserControl
 
             foreach (DeviceLayoutButton button in Device.Layout.Buttons)
             {
-
-                if (Device.Layout.OutputTypes.ContainsKey(button.Output))
+                if (Device.Layout.OutputTypes.TryGetValue(button.Output, out DeviceOutput? outputType))
                 {
-                    DeviceOutput outputType = Device.Layout.OutputTypes[button.Output];
-
-
                     Grid buttonContainer = new Grid();
                     Control control;
                     Grid container = new Grid();

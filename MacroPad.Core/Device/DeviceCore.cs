@@ -1,5 +1,4 @@
 ﻿using MacroPad.Shared.Plugin.Protocol;
-using Newtonsoft.Json.Linq;
 using MacroPad.Shared.Device;
 using MacroPad.Core.Models.Config;
 
@@ -68,7 +67,7 @@ namespace MacroPad.Core.Device
                                     case OutputType.Palette:
                                         if (buttonConfig.Status.Value != null)
                                         {
-                                            int value = buttonConfig.Status.Value.Value<int?>() ?? 0;
+                                            int value = buttonConfig.Status.Value.TryGetValue(out int? value2) ? value2??0 : 0;
                                             SetButtonContent(button, value);
                                         }
                                         else SetButtonContent(button, 0);
@@ -76,7 +75,7 @@ namespace MacroPad.Core.Device
                                     case OutputType.Number:
                                         if (buttonConfig.Status.Value != null)
                                         {
-                                            decimal value = buttonConfig.Status.Value.Value<decimal?>() ?? 0;
+                                            decimal value = buttonConfig.Status.Value.TryGetValue(out decimal? value2) ? value2 ?? 0 : 0;
                                             SetButtonContent(button, value);
                                         }
                                         else SetButtonContent(button, 0);

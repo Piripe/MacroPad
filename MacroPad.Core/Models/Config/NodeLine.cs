@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Models.Config
 {
     public class NodeLine
     {
-        [JsonProperty("n")]
-        public int Node;
-        [JsonProperty("i")]
-        public int PointIndex;
+        [JsonPropertyName("n")]
+        public int Node { get; set; }
+        [JsonPropertyName("i")]
+        public int PointIndex { get; set; }
     }
 }

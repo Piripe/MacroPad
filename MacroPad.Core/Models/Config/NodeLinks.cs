@@ -1,23 +1,23 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Models.Config
 {
     public class NodeLinks
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; } = "";
-        [JsonProperty("g")]
+        [JsonPropertyName("g")]
         public Dictionary<int, int> Getters { get; set; } = [];
-        [JsonProperty("r")]
+        [JsonPropertyName("r")]
         public Dictionary<int, int> Runners { get; set; } = [];
-        [JsonProperty("x")]
+        [JsonPropertyName("x")]
         public int X { get; set; }
-        [JsonProperty("y")]
+        [JsonPropertyName("y")]
         public int Y { get; set; }
-        [JsonProperty("d")]
-        public Dictionary<string, JToken> Data { get; set; } = [];
-        [JsonProperty("c")]
-        public Dictionary<int, Dictionary<string, JToken>> Consts { get; set; } = [];
+        [JsonPropertyName("d")]
+        public Dictionary<string, JsonValue> Data { get; set; } = [];
+        [JsonPropertyName("c")]
+        public Dictionary<int, Dictionary<string, JsonValue>> Consts { get; set; } = [];
     }
 }

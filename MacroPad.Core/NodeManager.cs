@@ -5,7 +5,7 @@ using MacroPad.Core.Node;
 using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Core
 {
@@ -67,7 +67,7 @@ namespace MacroPad.Core
                         object value = type.DefaultValue;
                         if (links.Getters.TryGetValue(index, out int value2)) value = GetLine(value2) ?? type.DefaultValue;
                         else return GetConst(links.Consts, type, index) ?? type.DefaultValue;
-                        if (value.GetType().IsAssignableFrom(typeof(JValue))) value = ((JValue)value).Value ?? type.DefaultValue;
+                        if (value.GetType().IsAssignableFrom(typeof(JsonValue))) value = ((JsonValue)value).TryGetValue(out object? value3) ? value3 ?? type.DefaultValue : type.DefaultValue;
                         if (type.Type.IsAssignableFrom(value.GetType())) return value;
                         if (type.TypeConverter != null) return type.TypeConverter(value) ?? type.DefaultValue;
                         return type.DefaultValue;
@@ -105,7 +105,7 @@ namespace MacroPad.Core
                         object value = type.DefaultValue;
                         if (links.Getters.TryGetValue(index, out int value2)) value = GetLine(value2) ?? type.DefaultValue;
                         else return GetConst(links.Consts, type, index) ?? type.DefaultValue;
-                        if (value.GetType().IsAssignableFrom(typeof(JValue))) value = ((JValue)value).Value ?? type.DefaultValue;
+                        if (value.GetType().IsAssignableFrom(typeof(JsonValue))) value = ((JsonValue)value).TryGetValue(out object? value3) ? value3 ?? type.DefaultValue : type.DefaultValue;
                         if (type.Type.IsAssignableFrom(value.GetType())) return value;
                         if (type.TypeConverter != null) return type.TypeConverter(value) ?? type.DefaultValue;
                         return type.DefaultValue;
@@ -119,9 +119,9 @@ namespace MacroPad.Core
                 return null;
             }
 
-            object? GetConst(Dictionary<int,Dictionary<string, JToken>> consts, NodeType type, int index)
+            object? GetConst(Dictionary<int,Dictionary<string, JsonValue>> consts, NodeType type, int index)
             {
-                if (!consts.TryGetValue(index, out Dictionary<string, JToken>? data)) return null;
+                if (!consts.TryGetValue(index, out Dictionary<string, JsonValue>? data)) return null;
                 return type.Load != null ? type.Load(new ResourceManager(data)) : null;
             }
 

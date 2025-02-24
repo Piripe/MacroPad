@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
-using MacroPad.Core.Config;
+using MacroPad.Core.Models.Config;
 using MacroPad.Core.Device;
 using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;

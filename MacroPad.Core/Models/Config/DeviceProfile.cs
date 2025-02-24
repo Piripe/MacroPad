@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Models.Config
 {
     public class DeviceProfile
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; } = "";
 
-        [JsonProperty("buttons")]
+        [JsonPropertyName("buttons")]
         public Dictionary<int, Dictionary<int, ButtonConfig>> ButtonsConfig { get; set; } = [];
     }
 }

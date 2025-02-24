@@ -1,7 +1,9 @@
 ﻿using MacroPad.Core.BasePlugin;
 using MacroPad.Shared.Plugin;
-using Newtonsoft.Json.Linq;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Plugin
 {
@@ -27,9 +29,9 @@ namespace MacroPad.Core.Plugin
 
                 if (!File.Exists(pluginJsonFile)) continue;
 
-                JObject pluginJson = JObject.Parse(File.ReadAllText(pluginJsonFile));
+                JsonObject? pluginJson = (JsonObject?)JsonNode.Parse(File.ReadAllText(pluginJsonFile));
 
-                if (!pluginJson.ContainsKey("Main")) continue;
+                if (pluginJson == null || !pluginJson.ContainsKey("Main")) continue;
 
                 string pluginFile = Path.Combine(pluginDir, pluginJson["Main"]?.ToString() ?? "");
 

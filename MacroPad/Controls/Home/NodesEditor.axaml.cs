@@ -12,11 +12,11 @@ using MacroPad.Controls.Home.NodesEditorHistory.Actions;
 using MacroPad.Core.Device;
 using MacroPad.Core.Models.Config;
 using MacroPad.Shared.Device;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 
 namespace MacroPad.Controls.Home;
 
@@ -579,7 +579,7 @@ public partial class NodesEditor : UserControl
             using var streamReader = new System.IO.StreamReader(stream);
             string fileContent = await streamReader.ReadToEndAsync();
 
-            ButtonConfig.EventScripts[(ButtonEvent)EventSelector.SelectedIndex] = JsonConvert.DeserializeObject<NodeScript>(fileContent) ?? CurrentScript;
+            ButtonConfig.EventScripts[(ButtonEvent)EventSelector.SelectedIndex] = JsonSerializer.Deserialize<NodeScript>(fileContent) ?? CurrentScript;
             EventSelector_SelectionChanged(this, new SelectionChangedEventArgs(e.RoutedEvent ?? new RoutedEvent("", RoutingStrategies.Direct, typeof(object), typeof(object)), new List<object>(), new List<object>()));
         }
     }
@@ -602,7 +602,7 @@ public partial class NodesEditor : UserControl
             await using var stream = await file.OpenWriteAsync();
             using var streamWriter = new System.IO.StreamWriter(stream);
 
-            streamWriter.Write(JsonConvert.SerializeObject(CurrentScript));
+            streamWriter.Write(JsonSerializer.Serialize(CurrentScript));
         }
     }
 }

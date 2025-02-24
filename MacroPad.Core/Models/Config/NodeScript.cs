@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Models.Config
 {
     public class NodeScript
     {
-        [JsonProperty("x")]
+        [JsonPropertyName("x")]
         public int StartX { get; set; }
-        [JsonProperty("y")]
+        [JsonPropertyName("y")]
         public int StartY { get; set; }
-        [JsonProperty("links")]
+        [JsonPropertyName("links")]
         public Dictionary<int, NodeLinks> NodesLinks { get; set; } = [];
-        [JsonProperty("lines")]
+        [JsonPropertyName("lines")]
         public Dictionary<int, NodeLine> NodeLines { get; set; } = [];
     }
 }
