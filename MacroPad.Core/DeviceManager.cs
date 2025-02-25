@@ -3,6 +3,8 @@ using MacroPad.Core.Models;
 using MacroPad.Core.Models.Config;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Protocol;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace MacroPad.Core
 {
@@ -22,10 +24,24 @@ namespace MacroPad.Core
         {
             NodeManager.Init();
 
+            PluginManager.PluginEnabled += PluginManager_PluginEnabled;
+            PluginManager.PluginDisabled += PluginManager_PluginDisabled;
+
             PluginManager.ScanPlugins();
+        }
 
+        private static void PluginManager_PluginDisabled(object? sender, IPluginInfos e)
+        {
+            foreach (IProtocol protocol in e.Protocols)
+            {
+                protocol.DeviceDetected -= Protocol_DeviceDetected;
+                protocol.DeviceDisconnected -= Protocol_DeviceDisconnected;
+            }
+        }
 
-            foreach (IProtocol protocol in PluginManager.Protocols)
+        private static void PluginManager_PluginEnabled(object? sender, IPluginInfos e)
+        {
+            foreach (IProtocol protocol in e.Protocols)
             {
                 protocol.DeviceDetected += Protocol_DeviceDetected;
                 protocol.DeviceDisconnected += Protocol_DeviceDisconnected;
@@ -36,8 +52,6 @@ namespace MacroPad.Core
 
         private static void Protocol_DeviceDetected(object? sender, DeviceDetectedEventArgs e)
         {
-            Console.WriteLine($"Device detected: {e.Device.Name} ({e.Device.Id})");
-
             Config.EnabledDevices.TryAdd(e.Device.Id, false);
             if (!Config.DevicesProfiles.ContainsKey(e.Device.Id)) Config.DevicesProfiles.Add(e.Device.Id, new List<DeviceProfile>() { { new DeviceProfile() { Name= "Profile"} } });
             Config.DefaultProfile.TryAdd(e.Device.Id, 0);
@@ -56,7 +70,6 @@ namespace MacroPad.Core
 
         private static void Protocol_DeviceDisconnected(object? sender, DeviceDetectedEventArgs e)
         {
-            Console.WriteLine($"Device disconnected: {e.Device.Name} ({e.Device.Id})");
             ConnectedDevices.RemoveWhere(device=>device.ProtocolDevice == e.Device);
             DeviceDisconnected?.Invoke(sender, e);
         }
@@ -66,18 +79,31 @@ namespace MacroPad.Core
             DeviceCore? device = ConnectedDevices.FirstOrDefault((x) => x.ProtocolDevice.Id == deviceId);
             if (device != null)
             {
-                device.Connect();
-                Config.EnabledDevices[deviceId] = true;
+                EnableDevice(device);
             }
+        }
+        public static void EnableDevice(DeviceCore device)
+        {
+            device.Connect();
+            Config.EnabledDevices[device.ProtocolDevice.Id] = true;
         }
         public static void DisableDevice(string deviceId)
         {
             DeviceCore? device = ConnectedDevices.FirstOrDefault((x) => x.ProtocolDevice.Id == deviceId);
             if (device != null)
             {
-                device.Disconnect();
-                Config.EnabledDevices[deviceId] = false;
+                DisableDevice(device);
             }
+        }
+        public static void DisableDevice(DeviceCore device)
+        {
+            device.Disconnect();
+            Config.EnabledDevices[device.ProtocolDevice.Id] = false;
+        }
+        public static void RemoveDevice(DeviceCore device)
+        {
+            ConnectedDevices.Remove(device);
+            DeviceDisconnected?.Invoke(null, new DeviceDetectedEventArgs(device.ProtocolDevice));
         }
     }
 }

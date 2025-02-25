@@ -75,7 +75,7 @@ namespace MacroPad.Core.Models.Plugin
         [JsonIgnore]
         public bool IsLoaded => _pluginLoader == null ? false : true;
         [JsonIgnore]
-        public bool IsUnloadable => _pluginLoader?.IsUnloadable ?? false;
+        public bool IsUnloadable => _pluginInfos?.NodeTypes.Length == 0 && _pluginInfos?.NodeCategories.Length == 0;
         public void Unload()
         {
             if (_pluginInfos == null) return;
@@ -83,6 +83,20 @@ namespace MacroPad.Core.Models.Plugin
             PluginManager.OnPluginDisabled(_pluginInfos);
 
             PluginManager.Protocols.ExceptWith(_pluginInfos.Protocols);
+
+            foreach (var protocol in _pluginInfos.Protocols)
+            {
+                foreach (var device in DeviceManager.ConnectedDevices.Where(x => x.ProtocolDevice.Protocol == protocol.Id))
+                {
+                    device.Disconnect();
+                    DeviceManager.RemoveDevice(device);
+                }
+                protocol.Disable();
+            }
+
+            _pluginInfos = null;
+            _pluginLoader?.Dispose();
+            _pluginLoader = null;
         }
     }
 }

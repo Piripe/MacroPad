@@ -20,11 +20,18 @@ namespace MacroPad.Controls.Settings
 
         private bool _isEnabled = false;
         public bool IsEnabled { get { return _isEnabled; } set { 
-                this.RaiseAndSetIfChanged(ref _isEnabled, value); 
-                if (value) PluginManager.EnablePlugin(Plugin);
+                this.RaiseAndSetIfChanged(ref _isEnabled, value);
+                if (value)
+                {
+                    PluginManager.EnablePlugin(Plugin);
+                    IsUnloadable = Plugin.IsUnloadable;
+                }
                 else PluginManager.DisablePlugin(Plugin);
             } }
 
         public Bitmap? Icon { get; set; }
+
+        private bool _isUnloadable = false;
+        public bool IsUnloadable { get => _isUnloadable; set=>this.RaiseAndSetIfChanged(ref _isUnloadable, value); }
     }
 }

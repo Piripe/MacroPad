@@ -6,6 +6,7 @@ using MacroPad.Views.Navigation;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MacroPad.Views

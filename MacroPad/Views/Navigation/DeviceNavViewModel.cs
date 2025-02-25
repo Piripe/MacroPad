@@ -1,4 +1,5 @@
-﻿using MacroPad.Core.Device;
+﻿using MacroPad.Core;
+using MacroPad.Core.Device;
 using MacroPad.ViewModels;
 using ReactiveUI;
 
@@ -15,7 +16,7 @@ namespace MacroPad.Views.Navigation
             set
             {
                 this.RaiseAndSetIfChanged(ref _enabled, value);
-                if (value) Device.Connect();
+                if (value) DeviceManager.EnableDevice(Device);
                 else Device.Disconnect();
             }
         }

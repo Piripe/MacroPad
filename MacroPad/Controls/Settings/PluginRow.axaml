@@ -30,7 +30,14 @@
 			</StackPanel>
 			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Top" Spacing="4">
 				<TextBlock Text="Enable"/>
-				<ToggleSwitch IsChecked="{CompiledBinding IsEnabled}" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" OffContent="" OnContent="" Padding="0" Margin="4 -14 -8 0"/>
+				<ToggleSwitch IsChecked="{CompiledBinding IsEnabled}" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" OffContent="" OnContent="" Padding="0" Margin="4 -14 -8 0">
+					<ToggleSwitch.IsEnabled>
+						<MultiBinding Converter="{x:Static BoolConverters.Or}">
+							<CompiledBinding Path="IsEnabled" Converter="{x:Static BoolConverters.Not}"/>
+							<CompiledBinding Path="IsUnloadable"/>
+						</MultiBinding>
+					</ToggleSwitch.IsEnabled>
+				</ToggleSwitch>
 			</StackPanel>
 		</Grid>
 	</Border>
