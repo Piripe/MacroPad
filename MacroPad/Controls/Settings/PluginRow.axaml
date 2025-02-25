@@ -14,8 +14,9 @@
 	
 	<Border Classes="card" Padding="8">
 		<Grid ColumnDefinitions="96,*,Auto">
-			<icons:SymbolIcon Symbol="" FontSize="96" VerticalAlignment="Top"/>
-			<StackPanel Grid.Column="1">
+			<icons:SymbolIcon IsVisible="{CompiledBinding !Plugin.IconType}" Symbol="{CompiledBinding Plugin.Icon}" FontSize="96" VerticalAlignment="Top"/>
+			<Image IsVisible="{CompiledBinding Plugin.IconType}" Source="{CompiledBinding Icon}"/>
+			<StackPanel Margin="8 0 0 0" Grid.Column="1">
 				<TextBlock Classes="h4" Text="{CompiledBinding Plugin.Name}"/>
 				<TextBlock Text="{CompiledBinding Plugin.Description}" TextWrapping="Wrap"/>
 			</StackPanel>
@@ -29,7 +30,7 @@
 			</StackPanel>
 			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Top" Spacing="4">
 				<TextBlock Text="Enable"/>
-				<ToggleSwitch Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" OffContent="" OnContent="" Padding="0" Margin="4 -14 -8 0"/>
+				<ToggleSwitch IsChecked="{CompiledBinding IsEnabled}" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" OffContent="" OnContent="" Padding="0" Margin="4 -14 -8 0"/>
 			</StackPanel>
 		</Grid>
 	</Border>
