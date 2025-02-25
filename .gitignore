@@ -401,3 +401,6 @@ FodyWeavers.xsd
 
 # config file created by Avalonia by error sometimes
 config.json
+
+
+!MacroPad.Core/BasePlugin/**
