@@ -1,16 +1,8 @@
-using Avalonia;
 using Avalonia.Controls;
-using FluentAvalonia.Core;
-using FluentAvalonia.UI.Controls;
-using FluentAvalonia.UI.Navigation;
 using MacroPad.Controls;
 using MacroPad.Controls.Home;
-using MacroPad.Core.Device;
 using MacroPad.Core.Models.Config;
-using MacroPad.Pages;
-using MacroPad.ViewModels;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MacroPad.Views
 {

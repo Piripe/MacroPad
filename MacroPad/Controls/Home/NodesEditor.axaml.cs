@@ -497,8 +497,6 @@ public partial class NodesEditor : UserControl
     }
     public void RecordAction(IHistoryAction action)
     {
-        Debug.WriteLine($"Recording action: {action.GetType().Name}");
-
         _historyIndex++;
         if (_historyIndex < _history.Count) _history.RemoveRange(_historyIndex, _history.Count - _historyIndex);
         _history.Add(action);
@@ -533,8 +531,6 @@ public partial class NodesEditor : UserControl
 
             if (nodePosition.HasValue && nodeId != null)
             {
-                Debug.WriteLine($"Adding node: {nodeId} at {nodePosition.Value.X}/{nodePosition.Value.Y}");
-
                 var newLinks = new NodeLinks() { Id = nodeId, X = (int)(nodePosition.Value.X / 32), Y = (int)(nodePosition.Value.Y / 32) };
                 var action = new NodeAddition(newLinks, CurrentScript.NodesLinks.Count == 0 ? 0 : CurrentScript.NodesLinks.Keys.Max()+1, this);
 
