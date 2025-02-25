@@ -8,7 +8,7 @@ namespace MacroPad.Core.Models
     public class MacroPadConfig
     {
         [JsonPropertyName("plugins")]
-        public Dictionary<string, bool> PluginsConfig { get; set; } = [];
+        public Dictionary<string, bool> EnabledPlugins { get; set; } = [];
         [JsonPropertyName("enabledDevices")]
         public Dictionary<string, bool> EnabledDevices { get; set; } = [];
         [JsonPropertyName("devicesProfile")]

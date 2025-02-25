@@ -2,12 +2,13 @@ using Avalonia;
 using Avalonia.Controls;
 using MacroPad.Shared.Plugin;
 using MacroPad.Core.BasePlugin;
+using MacroPad.Core.Models.Plugin;
 
 namespace MacroPad.Controls.Settings;
 
 public partial class PluginCard : UserControl
 {
-    public IPluginInfos Plugin { get; set; } = new BasePluginInfos();
+    public PluginInfos Plugin { get; set; } = new PluginInfos() { };
     public PluginCard()
     {
         InitializeComponent();
@@ -19,7 +20,7 @@ public partial class PluginCard : UserControl
         PluginDescription.Text = Plugin.Description;
 
         PluginFeatures.Children.Clear();
-        foreach (IProtocol protocol in Plugin.Protocols)
+        /*foreach (IProtocol protocol in Plugin.Protocols)
         {
             PluginFeatures.Children.Add(new PluginFeature() { FeatureName = protocol.Name, FeatureId = protocol.Id });
         }
@@ -30,6 +31,6 @@ public partial class PluginCard : UserControl
         foreach (NodeType nodeType in Plugin.NodeTypes)
         {
             PluginFeatures.Children.Add(new PluginFeature() { FeatureName = nodeType.Name, Disabled = true });
-        }
+        }*/
     }
 }

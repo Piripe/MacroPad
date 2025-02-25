@@ -1,4 +1,5 @@
 ﻿using MacroPad.Controls.Settings;
+using MacroPad.Core;
 using MacroPad.Core.Plugin;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace MacroPad.Views.Settings
     {
         public ObservableCollection<PluginRowViewModel> Plugins { get; set; }
         public PluginsViewModel() {
-            Plugins = [.. PluginLoader.plugins.Select(x => new PluginRowViewModel(x))];
-            PluginLoader.PluginAdded += (s, e) => Plugins.Add(new PluginRowViewModel(e));
-            PluginLoader.PluginRemoved += (s, e) => Plugins.Remove(Plugins.First(x => x.Plugin == e));
+            Plugins = [.. PluginManager.Plugins.Select(x => new PluginRowViewModel(x))];
+            PluginManager.PluginAdded += (s, e) => Plugins.Add(new PluginRowViewModel(e));
+            PluginManager.PluginRemoved += (s, e) => Plugins.Remove(Plugins.First(x => x.Plugin == e));
         }
     }
 }

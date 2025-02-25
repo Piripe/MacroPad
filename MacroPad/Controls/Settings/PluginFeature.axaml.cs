@@ -17,14 +17,14 @@ public partial class PluginFeature : UserControl
     {
         FeatureNameDisplay.Text = FeatureName;
         EnableFeature.IsEnabled = !Disabled;
-        EnableFeature.IsChecked = Disabled || (DeviceManager.Config.PluginsConfig.TryGetValue(FeatureId, out bool value) && value);
+        EnableFeature.IsChecked = Disabled || (DeviceManager.Config.EnabledPlugins.TryGetValue(FeatureId, out bool value) && value);
 
         EnableFeature.IsCheckedChanged += EnableFeature_IsCheckedChanged;
     }
 
     private void EnableFeature_IsCheckedChanged(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (EnableFeature.IsChecked??false) DeviceManager.EnablePluginFeature(FeatureId);
-        else DeviceManager.DisablePluginFeature(FeatureId);
+        //if (EnableFeature.IsChecked??false) DeviceManager.EnablePluginFeature(FeatureId);
+        //else DeviceManager.DisablePluginFeature(FeatureId);
     }
 }

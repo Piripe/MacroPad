@@ -4,11 +4,10 @@ using Avalonia.Interactivity;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
 using MacroPad.Core.Models.Config;
 using MacroPad.Core.Device;
-using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using MacroPad.Core;
 
 namespace MacroPad.Controls.Home.NodePicker;
 
@@ -25,12 +24,12 @@ public partial class NodePicker : UserControl
     private List<NodePickerCategory> _categories = [];
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        if (CategoriesPanel.Children.Count != PluginLoader.nodeCategories.Count && Editor != null && Editor.Button != null)
+        if (CategoriesPanel.Children.Count != NodeManager.NodeCategories.Count && Editor != null && Editor.Button != null)
         {
             DeviceOutput? output = null;
             if (Editor.Device != null && Editor.Device.Layout != null && Editor.Device.Layout.OutputTypes.TryGetValue(Editor.Button.Output, out DeviceOutput? value)) output = value;
             CategoriesPanel.Children.Clear();
-            foreach (INodeCategory category in PluginLoader.nodeCategories)
+            foreach (INodeCategory category in NodeManager.NodeCategories)
             {
                 var categoryDisplay = new NodePickerCategory() { Category = category, Button = Editor.Button, DeviceOutput = output };
 
@@ -49,8 +48,6 @@ public partial class NodePicker : UserControl
 
                         if (nodePosition.HasValue && e.Id != null)
                         {
-                            Debug.WriteLine($"Adding node: {e.Id} at {nodePosition.Value.X}/{nodePosition.Value.Y}");
-
                             var newLinks = new NodeLinks() { Id = e.Id, X = (int)(nodePosition.Value.X), Y = (int)(nodePosition.Value.Y) };
                             var action = new NodeAddition(newLinks, Editor.CurrentScript.NodesLinks.Count == 0 ? 0 : Editor.CurrentScript.NodesLinks.Keys.Max() + 1, Editor);
 

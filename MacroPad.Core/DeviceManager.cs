@@ -1,7 +1,6 @@
 ﻿using MacroPad.Core.Device;
 using MacroPad.Core.Models;
 using MacroPad.Core.Models.Config;
-using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Protocol;
 
@@ -19,23 +18,19 @@ namespace MacroPad.Core
 
 
 
-        public static void Init() {
-            PluginLoader.LoadPlugins();
-
+        public static void Init()
+        {
             NodeManager.Init();
 
-            foreach (IProtocol protocol in PluginLoader.protocols)
+            PluginManager.ScanPlugins();
+
+
+            foreach (IProtocol protocol in PluginManager.Protocols)
             {
                 protocol.DeviceDetected += Protocol_DeviceDetected;
                 protocol.DeviceDisconnected += Protocol_DeviceDisconnected;
 
-                string? protocolName = protocol.Id;
-                if (protocolName == null) return;
-                Config.PluginsConfig.TryAdd(protocolName, false);
-                if (Config.PluginsConfig[protocolName])
-                {
-                    protocol.Enable();
-                }
+                protocol.Enable();
             }
         }
 
@@ -64,34 +59,6 @@ namespace MacroPad.Core
             Console.WriteLine($"Device disconnected: {e.Device.Name} ({e.Device.Id})");
             ConnectedDevices.RemoveWhere(device=>device.ProtocolDevice == e.Device);
             DeviceDisconnected?.Invoke(sender, e);
-        }
-
-
-        public static void EnablePluginFeature(string pluginId)
-        {
-            EnableProtocol(pluginId);
-        }
-        public static void DisablePluginFeature(string pluginId)
-        {
-            DisableProtocol(pluginId);
-        }
-        public static void EnableProtocol(string pluginId)
-        {
-            IProtocol? protocol = PluginLoader.protocols.FirstOrDefault((x) => x.Id == pluginId);
-            if (protocol != null)
-            {
-                protocol.Enable();
-                Config.PluginsConfig[pluginId] = true;
-            }
-        }
-        public static void DisableProtocol(string pluginId)
-        {
-            IProtocol? protocol = PluginLoader.protocols.FirstOrDefault((x) => x.Id == pluginId);
-            if (protocol != null)
-            {
-                protocol.Disable();
-                Config.PluginsConfig[pluginId] = false;
-            }
         }
 
         public static void EnableDevice(string deviceId)

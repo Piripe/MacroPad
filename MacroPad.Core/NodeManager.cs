@@ -2,9 +2,9 @@
 using MacroPad.Core.Models;
 using MacroPad.Core.Models.Config;
 using MacroPad.Core.Node;
-using MacroPad.Core.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
+using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 namespace MacroPad.Core
@@ -16,16 +16,31 @@ namespace MacroPad.Core
         public static Dictionary<Type, NodeType> Types = [];
         public readonly static Dictionary<string, INodeRunner> Runners = [];
         public readonly static Dictionary<string, INodeGetter> Getters = [];
+
+        public readonly static HashSet<NodeType> NodeTypes = [];
+        public readonly static HashSet<INodeCategory> NodeCategories = [];
+
         public static DeviceCore? CurrentDevice { get; private set; }
         public static DeviceLayoutButton? CurrentButton { get; private set; }
 
         public static void Init()
         {
-            foreach (NodeType type in PluginLoader.nodeTypes) {
+            PluginManager.PluginEnabled += PluginManager_PluginEnabled;
+            PluginManager.PluginDisabled += PluginManager_PluginDisabled;
+        }
+
+
+        private static void PluginManager_PluginEnabled(object? sender, IPluginInfos e)
+        {
+            NodeTypes.UnionWith(e.NodeTypes);
+            NodeCategories.UnionWith(e.NodeCategories);
+
+            foreach (NodeType type in e.NodeTypes)
+            {
                 Types.Add(type.Type, type);
             }
 
-            foreach (INodeCategory category in PluginLoader.nodeCategories)
+            foreach (INodeCategory category in e.NodeCategories)
             {
                 foreach (INodeRunner node in category.Runners)
                 {
@@ -34,6 +49,27 @@ namespace MacroPad.Core
                 foreach (INodeGetter node in category.Getters)
                 {
                     Getters.Add(category.Id + "." + node.Id, node);
+                }
+            }
+        }
+        private static void PluginManager_PluginDisabled(object? sender, IPluginInfos e)
+        {
+            NodeTypes.ExceptWith(e.NodeTypes);
+            NodeCategories.ExceptWith(e.NodeCategories);
+
+            foreach (NodeType type in e.NodeTypes)
+            {
+                Types.Remove(type.Type);
+            }
+            foreach(INodeCategory category in e.NodeCategories)
+            {
+                foreach (INodeRunner node in category.Runners)
+                {
+                    Runners.Remove(category.Id + "." + node.Id);
+                }
+                foreach (INodeGetter node in category.Getters)
+                {
+                    Getters.Remove(category.Id + "." + node.Id);
                 }
             }
         }
