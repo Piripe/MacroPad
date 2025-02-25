@@ -1,9 +1,12 @@
-﻿using MacroPad.Shared.Plugin;
+﻿using MacroPad.Core.Device;
+using MacroPad.Shared.Plugin;
+using MacroPad.Shared.Plugin.Settings;
 using McMaster.NETCore.Plugins;
 using Microsoft.DotNet.PlatformAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -41,7 +44,7 @@ namespace MacroPad.Core.Models.Plugin
         [JsonPropertyName("supportedPlatforms")]
         public Platform[] SupportedPlatforms { get; set; } = [Platform.Windows];
         [JsonIgnore]
-        public bool Enabled => DeviceManager.Config.EnabledPlugins.TryGetValue(PluginId!, out bool value) && value;
+        public bool Enabled => DeviceManager.Config.EnabledPlugins.Contains(PluginId!);
 
         private PluginLoader? _pluginLoader;
         [JsonIgnore]
@@ -68,20 +71,52 @@ namespace MacroPad.Core.Models.Plugin
             if (pluginsInfosInstance is not IPluginInfos pluginInfos) throw new InvalidCastException($"Can't cast \"{pluginInfosType.FullName}\" to IPluginInfos");
             _pluginInfos = pluginInfos;
 
-            PluginManager.OnPluginEnabled(_pluginInfos);
-
-            PluginManager.Protocols.UnionWith(_pluginInfos.Protocols);
+            PluginManager.OnPluginLoaded(_pluginInfos);
         }
         [JsonIgnore]
         public bool IsLoaded => _pluginLoader == null ? false : true;
         [JsonIgnore]
         public bool IsUnloadable => _pluginInfos?.NodeTypes.Length == 0 && _pluginInfos?.NodeCategories.Length == 0;
-        public void Unload()
+        [JsonIgnore]
+        public bool IsReloadable => IsUnloadable || (_pluginInfos?.Protocols.Length >= 1);
+        [JsonIgnore]
+        public ISettingsComponent[]? Settings => _pluginInfos?.Settings;
+        private void Unload()
         {
             if (_pluginInfos == null) return;
 
             PluginManager.OnPluginDisabled(_pluginInfos);
 
+            _pluginInfos = null;
+            _pluginLoader?.Dispose();
+            _pluginLoader = null;
+        }
+
+        private readonly HashSet<DeviceCore> DisabledDevices = [];
+        public void Enable()
+        {
+            if (_pluginInfos == null) Load();
+            if (_pluginInfos == null) return;
+            PluginManager.OnPluginEnabled(_pluginInfos);
+
+            PluginManager.Protocols.UnionWith(_pluginInfos.Protocols);
+
+            if (!IsUnloadable)
+            {
+                foreach (var protocol in _pluginInfos.Protocols)
+                {
+                    protocol.Enable();
+                }
+            }
+            foreach (var device in DisabledDevices)
+            {
+                if (DeviceManager.Config.EnabledDevices.Contains(device.ProtocolDevice.Id)) DeviceManager.AddDevice(device);
+            }
+        }
+        public void Disable()
+        {
+
+            if (_pluginInfos == null) return;
             PluginManager.Protocols.ExceptWith(_pluginInfos.Protocols);
 
             foreach (var protocol in _pluginInfos.Protocols)
@@ -90,13 +125,31 @@ namespace MacroPad.Core.Models.Plugin
                 {
                     device.Disconnect();
                     DeviceManager.RemoveDevice(device);
+                    if (!IsUnloadable) DisabledDevices.Add(device);
                 }
                 protocol.Disable();
             }
 
-            _pluginInfos = null;
-            _pluginLoader?.Dispose();
-            _pluginLoader = null;
+            if (IsUnloadable)
+            {
+                Unload();
+            }else
+            {
+                PluginManager.OnPluginDisabled(_pluginInfos);
+            }
+        }
+        public void Reload()
+        {
+            if (_pluginInfos == null) return;
+
+            if (IsUnloadable)
+            {
+                Unload();
+                Load();
+            }
+            else
+            {
+            }
         }
     }
 }

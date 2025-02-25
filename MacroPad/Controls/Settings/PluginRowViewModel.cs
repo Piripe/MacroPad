@@ -14,9 +14,17 @@ namespace MacroPad.Controls.Settings
         public PluginRowViewModel(PluginInfos plugin) { 
             Plugin = plugin; 
             _isEnabled = plugin.Enabled;
+            if (_isEnabled) UpdatePluginStates();
             if (plugin.IconType == PluginIconType.Image) Icon = new Bitmap(Path.Combine(Plugin.PluginDirectory!, Plugin.Icon));
         }
         public PluginRowViewModel() { Plugin = new PluginInfos() { Name = "Dummy Plugin"}; }
+
+        private void UpdatePluginStates()
+        {
+            IsUnloadable = Plugin.IsUnloadable;
+            IsReloadable = Plugin.IsReloadable;
+            HasSettings = Plugin.Settings?.Length > 0;
+        }
 
         private bool _isEnabled = false;
         public bool IsEnabled { get { return _isEnabled; } set { 
@@ -24,7 +32,7 @@ namespace MacroPad.Controls.Settings
                 if (value)
                 {
                     PluginManager.EnablePlugin(Plugin);
-                    IsUnloadable = Plugin.IsUnloadable;
+                    UpdatePluginStates();
                 }
                 else PluginManager.DisablePlugin(Plugin);
             } }
@@ -32,6 +40,15 @@ namespace MacroPad.Controls.Settings
         public Bitmap? Icon { get; set; }
 
         private bool _isUnloadable = false;
-        public bool IsUnloadable { get => _isUnloadable; set=>this.RaiseAndSetIfChanged(ref _isUnloadable, value); }
+        public bool IsUnloadable { get => _isUnloadable; set => this.RaiseAndSetIfChanged(ref _isUnloadable, value); }
+        private bool _isReloadable = false;
+        public bool IsReloadable { get => _isReloadable; set => this.RaiseAndSetIfChanged(ref _isReloadable, value); }
+        private bool _hasSettings= false;
+        public bool HasSettings { get => _hasSettings; set => this.RaiseAndSetIfChanged(ref _hasSettings, value); }
+
+        public void Reload()
+        {
+
+        }
     }
 }

@@ -25,12 +25,11 @@ namespace MacroPad.Core
 
         public static void Init()
         {
-            PluginManager.PluginEnabled += PluginManager_PluginEnabled;
-            PluginManager.PluginDisabled += PluginManager_PluginDisabled;
+            PluginManager.PluginLoaded += PluginManager_PluginLoaded;
         }
 
 
-        private static void PluginManager_PluginEnabled(object? sender, IPluginInfos e)
+        private static void PluginManager_PluginLoaded(object? sender, IPluginInfos e)
         {
             NodeTypes.UnionWith(e.NodeTypes);
             NodeCategories.UnionWith(e.NodeCategories);
@@ -49,27 +48,6 @@ namespace MacroPad.Core
                 foreach (INodeGetter node in category.Getters)
                 {
                     Getters.Add(category.Id + "." + node.Id, node);
-                }
-            }
-        }
-        private static void PluginManager_PluginDisabled(object? sender, IPluginInfos e)
-        {
-            NodeTypes.ExceptWith(e.NodeTypes);
-            NodeCategories.ExceptWith(e.NodeCategories);
-
-            foreach (NodeType type in e.NodeTypes)
-            {
-                Types.Remove(type.Type);
-            }
-            foreach(INodeCategory category in e.NodeCategories)
-            {
-                foreach (INodeRunner node in category.Runners)
-                {
-                    Runners.Remove(category.Id + "." + node.Id);
-                }
-                foreach (INodeGetter node in category.Getters)
-                {
-                    Getters.Remove(category.Id + "." + node.Id);
                 }
             }
         }

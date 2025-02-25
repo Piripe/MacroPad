@@ -18,6 +18,7 @@ namespace MacroPad.Core
         public readonly static HashSet<PluginInfos> Plugins = [];
         public readonly static IPluginInfos BasePlugin = new BasePluginInfos();
 
+        public static event EventHandler<IPluginInfos>? PluginLoaded;
         public static event EventHandler<IPluginInfos>? PluginEnabled;
         public static event EventHandler<IPluginInfos>? PluginDisabled;
         public static event EventHandler<PluginInfos>? PluginAdded;
@@ -46,26 +47,34 @@ namespace MacroPad.Core
                 return pluginInfos;
             }).Where(x=>x!=null).Select(x=>x!).ToHashSet());
 
+            PluginLoaded?.Invoke(null, BasePlugin);
             PluginEnabled?.Invoke(null, BasePlugin);
 
             foreach (var plugin in Plugins)
             {
-                // Ignore if plugin is disabled or not present in the config
-                if (!DeviceManager.Config.EnabledPlugins.TryGetValue(plugin.PluginId!, out bool value) || !value) continue;
-
-                plugin.Load();
+                if (DeviceManager.Config.LoadedPlugins.Contains(plugin.PluginId!))
+                {
+                    if (DeviceManager.Config.EnabledPlugins.Contains(plugin.PluginId!)) plugin.Enable();
+                    else plugin.Load();
+                }
             }
         }
 
         public static void EnablePlugin(PluginInfos plugin)
         {
-            if (!DeviceManager.Config.EnabledPlugins.TryAdd(plugin.PluginId!, true)) DeviceManager.Config.EnabledPlugins[plugin.PluginId!] = true;
-            plugin.Load();
+            DeviceManager.Config.EnabledPlugins.Add(plugin.PluginId!);
+            DeviceManager.Config.LoadedPlugins.Add(plugin.PluginId!);
+            plugin.Enable();
         }
         public static void DisablePlugin(PluginInfos plugin)
         {
-            if (!DeviceManager.Config.EnabledPlugins.TryAdd(plugin.PluginId!, false)) DeviceManager.Config.EnabledPlugins[plugin.PluginId!] = false;
-            plugin.Unload();
+            DeviceManager.Config.EnabledPlugins.Remove(plugin.PluginId!);
+            if (plugin.IsUnloadable) DeviceManager.Config.LoadedPlugins.Remove(plugin.PluginId!);
+            plugin.Disable();
+        }
+        public static void OnPluginLoaded(IPluginInfos plugin)
+        {
+            PluginLoaded?.Invoke(null, plugin);
         }
         public static void OnPluginEnabled(IPluginInfos plugin)
         {

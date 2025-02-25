@@ -7,10 +7,12 @@ namespace MacroPad.Core.Models
 {
     public class MacroPadConfig
     {
-        [JsonPropertyName("plugins")]
-        public Dictionary<string, bool> EnabledPlugins { get; set; } = [];
+        [JsonPropertyName("enabledPlugins")]
+        public HashSet<string> EnabledPlugins { get; set; } = [];
+        [JsonPropertyName("loadedPlugins")]
+        public HashSet<string> LoadedPlugins { get; set; } = [];
         [JsonPropertyName("enabledDevices")]
-        public Dictionary<string, bool> EnabledDevices { get; set; } = [];
+        public HashSet<string> EnabledDevices { get; set; } = [];
         [JsonPropertyName("devicesProfile")]
         public Dictionary<string, int> DefaultProfile { get; set; } = [];
         [JsonPropertyName("devices")]

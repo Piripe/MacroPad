@@ -21,10 +21,10 @@
 				<TextBlock Text="{CompiledBinding Plugin.Description}" TextWrapping="Wrap"/>
 			</StackPanel>
 			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Bottom" Spacing="4">
-				<Button Width="36" Padding="0" ToolTip.Tip="Reload">
+				<Button IsVisible="{CompiledBinding IsReloadable}" Width="36" Padding="0" ToolTip.Tip="Reload">
 					<icons:SymbolIcon Symbol="ArrowClockwise"/>
 				</Button>
-				<Button Width="36" Padding="0" ToolTip.Tip="Settings">
+				<Button IsVisible="{CompiledBinding HasSettings}" Width="36" Padding="0" ToolTip.Tip="Settings">
 					<icons:SymbolIcon Symbol="Settings"/>
 				</Button>
 			</StackPanel>
@@ -34,7 +34,7 @@
 					<ToggleSwitch.IsEnabled>
 						<MultiBinding Converter="{x:Static BoolConverters.Or}">
 							<CompiledBinding Path="IsEnabled" Converter="{x:Static BoolConverters.Not}"/>
-							<CompiledBinding Path="IsUnloadable"/>
+							<CompiledBinding Path="IsReloadable"/>
 						</MultiBinding>
 					</ToggleSwitch.IsEnabled>
 				</ToggleSwitch>

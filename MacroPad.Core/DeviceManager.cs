@@ -1,6 +1,7 @@
 ﻿using MacroPad.Core.Device;
 using MacroPad.Core.Models;
 using MacroPad.Core.Models.Config;
+using MacroPad.Core.Models.Plugin;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Protocol;
 using System.Diagnostics;
@@ -52,20 +53,13 @@ namespace MacroPad.Core
 
         private static void Protocol_DeviceDetected(object? sender, DeviceDetectedEventArgs e)
         {
-            Config.EnabledDevices.TryAdd(e.Device.Id, false);
             if (!Config.DevicesProfiles.ContainsKey(e.Device.Id)) Config.DevicesProfiles.Add(e.Device.Id, new List<DeviceProfile>() { { new DeviceProfile() { Name= "Profile"} } });
             Config.DefaultProfile.TryAdd(e.Device.Id, 0);
             if (Config.DevicesProfiles[e.Device.Id].Count <= Config.DefaultProfile[e.Device.Id] || Config.DefaultProfile[e.Device.Id] < 0) Config.DefaultProfile[e.Device.Id] = 0;
 
             DeviceCore device = new(e.Device);
 
-            ConnectedDevices.Add(device);
-
-            if (Config.EnabledDevices[e.Device.Id])
-            {
-                device.Connect();
-            }
-            DeviceDetected?.Invoke(sender, e);
+            AddDevice(device);
         }
 
         private static void Protocol_DeviceDisconnected(object? sender, DeviceDetectedEventArgs e)
@@ -85,7 +79,7 @@ namespace MacroPad.Core
         public static void EnableDevice(DeviceCore device)
         {
             device.Connect();
-            Config.EnabledDevices[device.ProtocolDevice.Id] = true;
+            Config.EnabledDevices.Add(device.ProtocolDevice.Id);
         }
         public static void DisableDevice(string deviceId)
         {
@@ -98,12 +92,22 @@ namespace MacroPad.Core
         public static void DisableDevice(DeviceCore device)
         {
             device.Disconnect();
-            Config.EnabledDevices[device.ProtocolDevice.Id] = false;
+            Config.EnabledDevices.Remove(device.ProtocolDevice.Id);
         }
         public static void RemoveDevice(DeviceCore device)
         {
             ConnectedDevices.Remove(device);
             DeviceDisconnected?.Invoke(null, new DeviceDetectedEventArgs(device.ProtocolDevice));
+        }
+        public static void AddDevice(DeviceCore device)
+        {
+            ConnectedDevices.Add(device);
+
+            if (Config.EnabledDevices.Contains(device.ProtocolDevice.Id))
+            {
+                device.Connect();
+            }
+            DeviceDetected?.Invoke(null, new DeviceDetectedEventArgs(device.ProtocolDevice));
         }
     }
 }
