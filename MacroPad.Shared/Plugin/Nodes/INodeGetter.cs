@@ -12,7 +12,7 @@ namespace MacroPad.Shared.Plugin.Nodes
         public TypeNamePair[] Outputs { get; }
         public INodeComponent[] Components { get; }
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output);
-        public object[] GetOutputs(IResourceManager resource);
+        public object[] GetOutputs(INodeResourceManager resource);
 
     }
 }

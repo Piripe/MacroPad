@@ -8,7 +8,8 @@ using System;
 using Avalonia.Media;
 using MacroPad.Core.Device;
 using MacroPad.Core.BasePlugin.Device;
-using MacroPad.Core.Config;
+using MacroPad.Core.Models.Config;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Controls.Home.StatusEditorTypes;
 
@@ -28,7 +29,7 @@ public partial class Palette : UserControl
 
     private void ColorSelector_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        ButtonConfig.Status.Value = ColorSelector.SelectedIndex;
+        ButtonConfig.Status.Value = JsonValue.Create(ColorSelector.SelectedIndex);
         if (Button != null) Device.SetButtonContent(Button, ColorSelector.SelectedIndex);
     }
 

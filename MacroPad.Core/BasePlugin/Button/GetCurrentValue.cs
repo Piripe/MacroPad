@@ -18,7 +18,7 @@ namespace MacroPad.Core.BasePlugin.Button
         public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => button.Type == ButtonType.Slider;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
             return [(decimal)(NodeManager.CurrentDevice != null && NodeManager.CurrentButton != null ? NodeManager.CurrentDevice.ButtonsCurrentValue[NodeManager.CurrentButton.Id].Value : 0)];
         }

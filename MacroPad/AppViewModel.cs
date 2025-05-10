@@ -14,7 +14,7 @@ namespace MacroPad
 
         public AppViewModel()
         {
-            _mainWindow = new MainWindow();
+            _mainWindow = new MainWindow() { DataContext = new MainWindowViewModel()};
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 

@@ -9,14 +9,14 @@ using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using MacroPad.Controls.Home.NodesEditorHistory;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
-using MacroPad.Core.Config;
 using MacroPad.Core.Device;
+using MacroPad.Core.Models.Config;
 using MacroPad.Shared.Device;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 
 namespace MacroPad.Controls.Home;
 
@@ -497,8 +497,6 @@ public partial class NodesEditor : UserControl
     }
     public void RecordAction(IHistoryAction action)
     {
-        Debug.WriteLine($"Recording action: {action.GetType().Name}");
-
         _historyIndex++;
         if (_historyIndex < _history.Count) _history.RemoveRange(_historyIndex, _history.Count - _historyIndex);
         _history.Add(action);
@@ -533,8 +531,6 @@ public partial class NodesEditor : UserControl
 
             if (nodePosition.HasValue && nodeId != null)
             {
-                Debug.WriteLine($"Adding node: {nodeId} at {nodePosition.Value.X}/{nodePosition.Value.Y}");
-
                 var newLinks = new NodeLinks() { Id = nodeId, X = (int)(nodePosition.Value.X / 32), Y = (int)(nodePosition.Value.Y / 32) };
                 var action = new NodeAddition(newLinks, CurrentScript.NodesLinks.Count == 0 ? 0 : CurrentScript.NodesLinks.Keys.Max()+1, this);
 
@@ -579,7 +575,7 @@ public partial class NodesEditor : UserControl
             using var streamReader = new System.IO.StreamReader(stream);
             string fileContent = await streamReader.ReadToEndAsync();
 
-            ButtonConfig.EventScripts[(ButtonEvent)EventSelector.SelectedIndex] = JsonConvert.DeserializeObject<NodeScript>(fileContent) ?? CurrentScript;
+            ButtonConfig.EventScripts[(ButtonEvent)EventSelector.SelectedIndex] = JsonSerializer.Deserialize<NodeScript>(fileContent) ?? CurrentScript;
             EventSelector_SelectionChanged(this, new SelectionChangedEventArgs(e.RoutedEvent ?? new RoutedEvent("", RoutingStrategies.Direct, typeof(object), typeof(object)), new List<object>(), new List<object>()));
         }
     }
@@ -602,7 +598,7 @@ public partial class NodesEditor : UserControl
             await using var stream = await file.OpenWriteAsync();
             using var streamWriter = new System.IO.StreamWriter(stream);
 
-            streamWriter.Write(JsonConvert.SerializeObject(CurrentScript));
+            streamWriter.Write(JsonSerializer.Serialize(CurrentScript));
         }
     }
 }

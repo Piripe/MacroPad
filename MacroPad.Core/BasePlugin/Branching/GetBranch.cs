@@ -18,9 +18,9 @@ namespace MacroPad.Core.BasePlugin.Branching
         public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
-            return new object[] { resource.GetValue((bool)resource.GetValue(0) ? 2 : 1) };
+            return [ resource.GetValue((bool)resource.GetValue(0) ? 2 : 1) ];
         }
     }
 }

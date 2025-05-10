@@ -1,9 +1,11 @@
-﻿using MacroPad.Core.Config;
-using MacroPad.Core.Device;
+﻿using MacroPad.Core.Device;
+using MacroPad.Core.Models;
+using MacroPad.Core.Models.Config;
 using MacroPad.Core.Node;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
-using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Core
 {
@@ -14,16 +16,30 @@ namespace MacroPad.Core
         public static Dictionary<Type, NodeType> Types = [];
         public readonly static Dictionary<string, INodeRunner> Runners = [];
         public readonly static Dictionary<string, INodeGetter> Getters = [];
+
+        public readonly static HashSet<NodeType> NodeTypes = [];
+        public readonly static HashSet<INodeCategory> NodeCategories = [];
+
         public static DeviceCore? CurrentDevice { get; private set; }
         public static DeviceLayoutButton? CurrentButton { get; private set; }
 
         public static void Init()
         {
-            foreach (NodeType type in PluginLoader.nodeTypes) {
+            PluginManager.PluginLoaded += PluginManager_PluginLoaded;
+        }
+
+
+        private static void PluginManager_PluginLoaded(object? sender, IPluginInfos e)
+        {
+            NodeTypes.UnionWith(e.NodeTypes);
+            NodeCategories.UnionWith(e.NodeCategories);
+
+            foreach (NodeType type in e.NodeTypes)
+            {
                 Types.Add(type.Type, type);
             }
 
-            foreach (INodeCategory category in PluginLoader.nodeCategories)
+            foreach (INodeCategory category in e.NodeCategories)
             {
                 foreach (INodeRunner node in category.Runners)
                 {
@@ -65,13 +81,13 @@ namespace MacroPad.Core
                         object value = type.DefaultValue;
                         if (links.Getters.TryGetValue(index, out int value2)) value = GetLine(value2) ?? type.DefaultValue;
                         else return GetConst(links.Consts, type, index) ?? type.DefaultValue;
-                        if (value.GetType().IsAssignableFrom(typeof(JValue))) value = ((JValue)value).Value ?? type.DefaultValue;
+                        if (value.GetType().IsAssignableFrom(typeof(JsonValue))) value = ((JsonValue)value).TryGetValue(out object? value3) ? value3 ?? type.DefaultValue : type.DefaultValue;
                         if (type.Type.IsAssignableFrom(value.GetType())) return value;
                         if (type.TypeConverter != null) return type.TypeConverter(value) ?? type.DefaultValue;
                         return type.DefaultValue;
                     }
 
-                    NodeRunnerResult result = nodeRunner.Run(new NodeResourceManager(GetValue, links.Data));
+                    NodeRunnerResult result = nodeRunner.Run(new NodeResourceManager(links.Data, GetValue));
 
                     if (cache.ContainsKey(linksId)) cache[linksId] = result.Results;
                     else cache.Add(linksId, result.Results);
@@ -103,13 +119,13 @@ namespace MacroPad.Core
                         object value = type.DefaultValue;
                         if (links.Getters.TryGetValue(index, out int value2)) value = GetLine(value2) ?? type.DefaultValue;
                         else return GetConst(links.Consts, type, index) ?? type.DefaultValue;
-                        if (value.GetType().IsAssignableFrom(typeof(JValue))) value = ((JValue)value).Value ?? type.DefaultValue;
+                        if (value.GetType().IsAssignableFrom(typeof(JsonValue))) value = ((JsonValue)value).TryGetValue(out object? value3) ? value3 ?? type.DefaultValue : type.DefaultValue;
                         if (type.Type.IsAssignableFrom(value.GetType())) return value;
                         if (type.TypeConverter != null) return type.TypeConverter(value) ?? type.DefaultValue;
                         return type.DefaultValue;
                     }
 
-                    object[] result = nodeGetter.GetOutputs(new NodeResourceManager(GetValue, links.Data));
+                    object[] result = nodeGetter.GetOutputs(new NodeResourceManager(links.Data, GetValue));
 
                     if (!cache.TryAdd(linksId, result)) cache[linksId] = result;
                     if (index < result.Length) return result[index];
@@ -117,10 +133,10 @@ namespace MacroPad.Core
                 return null;
             }
 
-            object? GetConst(Dictionary<int,Dictionary<string, JToken>> consts, NodeType type, int index)
+            object? GetConst(Dictionary<int,Dictionary<string, JsonValue>> consts, NodeType type, int index)
             {
-                if (!consts.TryGetValue(index, out Dictionary<string, JToken>? data)) return null;
-                return type.Load != null ? type.Load(new NodeResourceManager((i) => throw new Exception("Can't get value of a type"), data)) : null;
+                if (!consts.TryGetValue(index, out Dictionary<string, JsonValue>? data)) return null;
+                return type.Load != null ? type.Load(new ResourceManager(data)) : null;
             }
 
 

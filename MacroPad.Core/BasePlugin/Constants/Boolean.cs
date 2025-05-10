@@ -1,6 +1,7 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
+using MacroPad.Shared.Plugin;
 
 namespace MacroPad.Core.BasePlugin.Constants
 {
@@ -23,7 +24,7 @@ namespace MacroPad.Core.BasePlugin.Constants
         } ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
             return [resource.GetData<bool?>("v") ?? false];
         }

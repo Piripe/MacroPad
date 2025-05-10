@@ -1,6 +1,7 @@
 ﻿using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
+using MacroPad.Shared.Plugin;
 
 namespace MacroPad.Core.BasePlugin.Button
 {
@@ -22,9 +23,9 @@ namespace MacroPad.Core.BasePlugin.Button
         public INodeComponent[] Components => [
             new ComboBox()
             {
-                GetItems = (IResourceManager resource, IDeviceLayoutButton button, IDeviceOutput output) =>
+                GetItems = (IResourceManager resource) =>
                 {
-                    return output.Palette.Select(x=>x.Name).ToArray();
+                    return resource.GetVirtual<IDeviceOutput>(VirtualDataKey.DeviceOutput)?.Palette.Select(x=>x.Name).ToArray() ?? [];
                 },
                 GetSelection = (IResourceManager resource) =>
                 {
@@ -38,7 +39,7 @@ namespace MacroPad.Core.BasePlugin.Button
         ];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => output.OutputType == OutputType.Palette;
-        public NodeRunnerResult Run(IResourceManager resource)
+        public NodeRunnerResult Run(INodeResourceManager resource)
         {
             if (NodeManager.CurrentButton != null) NodeManager.CurrentDevice?.SetButtonContent(NodeManager.CurrentButton, resource.GetData<int>("color"));
             return new NodeRunnerResult() { Results = [], RunnerOutputIndex = 0 };

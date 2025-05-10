@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
-using MacroPad.Core.Config;
+using MacroPad.Core.Models.Config;
 using System.Collections.Generic;
 using System.Linq;
 

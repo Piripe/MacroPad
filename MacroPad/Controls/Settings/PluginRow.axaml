@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:local="using:MacroPad.Controls.Settings"
+			 xmlns:icons="using:FluentIcons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="768" d:DesignHeight="112"
+             x:Class="MacroPad.Controls.Settings.PluginRow"
+			 x:DataType="local:PluginRowViewModel">
+
+	<Design.DataContext>
+		<local:PluginRowViewModel/>
+	</Design.DataContext>
+	
+	<Border Classes="card" Padding="8">
+		<Grid ColumnDefinitions="96,*,Auto">
+			<icons:SymbolIcon IsVisible="{CompiledBinding !Plugin.IconType}" Symbol="{CompiledBinding Plugin.Icon}" FontSize="96" VerticalAlignment="Top"/>
+			<Image IsVisible="{CompiledBinding Plugin.IconType}" Source="{CompiledBinding Icon}"/>
+			<StackPanel Margin="8 0 0 0" Grid.Column="1">
+				<TextBlock Classes="h4" Text="{CompiledBinding Plugin.Name}"/>
+				<TextBlock Text="{CompiledBinding Plugin.Description}" TextWrapping="Wrap"/>
+			</StackPanel>
+			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Bottom" Spacing="4">
+				<Button IsVisible="{CompiledBinding IsReloadable}" Width="36" Padding="0" ToolTip.Tip="Reload">
+					<icons:SymbolIcon Symbol="ArrowClockwise"/>
+				</Button>
+				<Button IsVisible="{CompiledBinding HasSettings}" Width="36" Padding="0" ToolTip.Tip="Settings">
+					<icons:SymbolIcon Symbol="Settings"/>
+				</Button>
+			</StackPanel>
+			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="36" VerticalAlignment="Top" Spacing="4">
+				<TextBlock Text="Enable"/>
+				<ToggleSwitch IsChecked="{CompiledBinding IsEnabled}" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" OffContent="" OnContent="" Padding="0" Margin="4 -14 -8 0">
+					<ToggleSwitch.IsEnabled>
+						<MultiBinding Converter="{x:Static BoolConverters.Or}">
+							<CompiledBinding Path="IsEnabled" Converter="{x:Static BoolConverters.Not}"/>
+							<CompiledBinding Path="IsReloadable"/>
+						</MultiBinding>
+					</ToggleSwitch.IsEnabled>
+				</ToggleSwitch>
+			</StackPanel>
+		</Grid>
+	</Border>
+</UserControl>

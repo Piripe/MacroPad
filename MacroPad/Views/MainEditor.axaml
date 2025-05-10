@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:ui="using:FluentAvalonia.UI.Controls"
+			 xmlns:views="using:MacroPad.Views"
+			 xmlns:c="using:MacroPad.Controls"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MacroPad.Views.MainEditor"
+			 x:DataType="views:MainEditorViewModel">
+
+	<Design.DataContext>
+		<views:MainEditorViewModel/>
+	</Design.DataContext>
+
+	<UserControl.Resources>
+	</UserControl.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="7*" MinWidth="128"/>
+			<ColumnDefinition Width="4"/>
+			<ColumnDefinition Width="2*" MinWidth="128" MaxWidth="448"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="4*" MinHeight="128" />
+			<RowDefinition Height="4" />
+			<RowDefinition Height="6*" MinHeight="196" />
+		</Grid.RowDefinitions>
+
+		<Border Grid.Column="0" Grid.Row="0" Background="{DynamicResource SolidBackgroundFillColorSecondary}" CornerRadius="8">
+			<Grid>
+				<c:DeviceViewer Device="{CompiledBinding Device}" ButtonPressed="DeviceViewer_ButtonPressed"/>
+				<TextBlock Classes="h4" FontWeight="SemiBold" Opacity="0.7" Margin="8" Text="{CompiledBinding Device.Name}" IsEnabled="False" />
+			</Grid>
+		</Border>
+		<Border x:Name="NodesEditorContainer" Grid.Column="0" Grid.Row="2" Background="{DynamicResource SolidBackgroundFillColorSecondary}" CornerRadius="8">
+			
+		</Border>
+		<Border x:Name="ButtonStatusEditorContainer" Grid.Column="2" Grid.Row="2" Background="{DynamicResource SolidBackgroundFillColorSecondary}" CornerRadius="8">
+			
+		</Border>
+		<Border Grid.Column="2" Grid.Row="0" Background="{DynamicResource SolidBackgroundFillColorSecondary}" CornerRadius="8">
+			<Grid x:Name="DeviceProfileSelectorContainer" />
+		</Border>
+		
+		<GridSplitter Grid.Column="1" Grid.RowSpan="3" ResizeDirection="Columns" Background="Transparent"/>
+		<GridSplitter Grid.Row="1" Grid.ColumnSpan="3" ResizeDirection="Rows" Background="Transparent"/>
+	</Grid>
+</UserControl>

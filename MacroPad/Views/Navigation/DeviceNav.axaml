@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:c="using:MacroPad.Controls"
+			 xmlns:paz="using:Avalonia.Controls.PanAndZoom"
+			 xmlns:nav="using:MacroPad.Views.Navigation"
+			 xmlns:media="using:Avalonia.Media"
+             mc:Ignorable="d" d:DesignWidth="198" d:DesignHeight="128"
+		     x:DataType="nav:DeviceNavViewModel"
+             x:Class="MacroPad.Views.Navigation.DeviceNav">
+	
+	
+	<Grid ColumnDefinitions="96,*">
+		<c:DeviceViewer x:Name="deviceViewer" IsEnabled="False" Width="96" Height="96" Device="{CompiledBinding Device}">
+			<c:DeviceViewer.Styles>
+				<Styles>
+					<Style Selector="paz|ZoomBorder">
+						<Setter Property="CornerRadius" Value="4"/>
+					</Style>
+				</Styles>
+			</c:DeviceViewer.Styles>	
+		</c:DeviceViewer>
+		<Panel Grid.Column="1">
+			<TextBlock Classes="h5" Margin="8 0 0 0" TextTrimming="CharacterEllipsis" MaxLines="3" Text="{CompiledBinding Device.Name}" ToolTip.Tip="{CompiledBinding Device.Name}"/>
+			<WrapPanel  Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" MaxHeight="32">
+				<CheckBox IsChecked="{CompiledBinding Enabled}" Margin="8 0 4 0" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" ToolTip.Tip="Toggle Device" />
+				<TextBlock Margin="0 0 4 0" Text="Enable" VerticalAlignment="Center" />
+			</WrapPanel>
+		</Panel>
+	</Grid>
+</UserControl>

@@ -1,5 +1,4 @@
 ﻿using MacroPad.Shared.Plugin;
-using MacroPad.Shared.Plugin.Nodes;
 using MacroPad.Shared.Plugin.Components;
 
 namespace MacroPad.Core.BasePlugin

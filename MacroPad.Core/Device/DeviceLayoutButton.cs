@@ -1,29 +1,29 @@
 ﻿using MacroPad.Shared.Device;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MacroPad.Core.Device
 {
     public class DeviceLayoutButton : IDeviceLayoutButton
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public int Id {  get; set; }
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public ButtonType Type { get; set; }
-        [JsonProperty("output")]
+        [JsonPropertyName("output")]
         public string Output { get; set; } = "";
-        [JsonProperty("x")]
+        [JsonPropertyName("x")]
         public int X { get; set; }
-        [JsonProperty("y")]
+        [JsonPropertyName("y")]
         public int Y { get; set; }
-        [JsonProperty("dx")]
+        [JsonPropertyName("dx")]
         public int DX { get; set; }
-        [JsonProperty("dy")]
+        [JsonPropertyName("dy")]
         public int DY { get; set; }
-        [JsonProperty("dw")]
+        [JsonPropertyName("dw")]
         public int DWidth { get; set; }
-        [JsonProperty("dh")]
+        [JsonPropertyName("dh")]
         public int DHeight { get; set; }
-        [JsonProperty("rotation")]
+        [JsonPropertyName("rotation")]
         public int Rotation { get; set; }
     }
 }

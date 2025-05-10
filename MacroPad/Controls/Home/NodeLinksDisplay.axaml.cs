@@ -5,16 +5,20 @@ using Avalonia.Input;
 using Avalonia.Media;
 using MacroPad.Controls.Home.NodesEditorHistory.Actions;
 using MacroPad.Core;
-using MacroPad.Core.Config;
 using MacroPad.Core.Device;
+using MacroPad.Core.Models;
+using MacroPad.Core.Models.Config;
 using MacroPad.Core.Node;
+using MacroPad.Shared.Device;
+using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text.Json.Nodes;
 
 namespace MacroPad.Controls.Home;
 
@@ -106,12 +110,12 @@ public partial class NodeLinksDisplay : UserControl
 
             foreach (INodeComponent component in components)
             {
-                AddNodeComponent(component, new NodeResourceManager(x => { throw new Exception("Can't get value of a component."); }, links.Data));
+                AddNodeComponent(component, new ResourceManager(links.Data, new() { {VirtualDataKey.DeviceOutput, (NodesEditor?.Device?.Layout?.OutputTypes.TryGetValue(NodesEditor?.Button?.Output ?? "", out DeviceOutput? output) ?? false) ? output : null } }));
             }
             i = 0;
             foreach (TypeNamePair node3 in inputs)
             {
-                if (NodeManager.Types.TryGetValue(node3.Type, out Shared.Plugin.NodeType? value)) {
+                if (NodeManager.Types.TryGetValue(node3.Type, out NodeType? value)) {
                     INodeComponent[] nodeComponents = value.Components;
                     if (!links.Consts.ContainsKey(i)) links.Consts.Add(i,[]);
                 }
@@ -300,91 +304,9 @@ public partial class NodeLinksDisplay : UserControl
     {
         DockPanel dockPanel = new()
         {
-            Margin = new Thickness(8, 0, 0, 0),
+            Margin = new Thickness(8, 0, 0, 0)
         };
-
-        switch (component)
-        {
-            case Shared.Plugin.Components.TextBox textBox:
-                TextBox textBoxControl = new() { Text = textBox.GetText != null ? textBox.GetText(resource) : "" };
-                textBoxControl.TextChanged += (object? sender, TextChangedEventArgs e) => {
-                    textBox.TextChanged?.Invoke(resource, textBoxControl.Text);
-                };
-                textBoxControl.Width = 196;
-                if (smallMode)
-                {
-                    textBoxControl.Height = 20d;
-                    textBoxControl.Classes.Add("small");
-                }
-                    dockPanel.Children.Add(textBoxControl);
-                break;
-            case Shared.Plugin.Components.NumericUpDown numericUpDown:
-                NumericUpDown numericUpDownControl = new()
-                {
-                    Minimum = numericUpDown.Min,
-                    Maximum = numericUpDown.Max,
-                    Value = numericUpDown.GetValue != null ? numericUpDown.GetValue(resource) : 0
-                };
-                numericUpDownControl.ValueChanged += (object? sender, NumericUpDownValueChangedEventArgs e) => {
-                    numericUpDown.ValueChanged?.Invoke(resource, numericUpDownControl.Value ?? 0);
-                };
-                numericUpDownControl.Width = 196;
-                if (smallMode)
-                {
-                    numericUpDownControl.Height = 20d;
-                    numericUpDownControl.Classes.Add("small");
-                }
-                dockPanel.Children.Add(numericUpDownControl);
-                break;
-            case Shared.Plugin.Components.ComboBox comboBox:
-                ObservableCollection<string> GetItems()
-                {
-                    if (comboBox.GetItems != null && NodesEditor?.Button != null && NodesEditor.Device?.Layout != null && NodesEditor.Device.Layout.OutputTypes.TryGetValue(NodesEditor.Button.Output, out DeviceOutput? value))
-                    {
-                        return new ObservableCollection<string>(comboBox.GetItems(resource, NodesEditor.Button, value));
-                    }
-                    else
-                    {
-                        return comboBox.Items;
-                    }
-                }
-                ObservableCollection<string> items = GetItems();
-                ComboBox comboBoxControl = new() { ItemsSource = items};
-                
-                void UpdateSelection()
-                {
-                    int index = 0;
-                    if (comboBox.GetSelectedItem != null)
-                    {
-                        string value = comboBox.GetSelectedItem(resource);
-                        index = items.IndexOf(value);
-                    }
-                    if (comboBox.GetSelection != null)
-                    {
-                        index = comboBox.GetSelection(resource);
-                    }
-                    if (index < items.Count && index >= 0) comboBoxControl.SelectedIndex = index;
-                }
-                UpdateSelection();
-
-
-                comboBoxControl.Items.CollectionChanged += (s, e) =>
-                {
-                    UpdateSelection();
-                };
-
-                comboBoxControl.SelectionChanged += (object? sender, SelectionChangedEventArgs e) => {
-                    comboBox.SelectionChanged?.Invoke(resource, comboBoxControl.SelectedIndex);
-                };
-                comboBoxControl.Width = 196;
-                if (smallMode)
-                {
-                    comboBoxControl.Height = 20;
-                    comboBoxControl.Classes.Add("small");
-                }
-                    dockPanel.Children.Add(comboBoxControl);
-                break;
-        }
+        dockPanel.Children.Add(new ComponentDisplay() { ResourceManager = resource, SmallMode = smallMode, Component = component });
 
         return dockPanel;
     }
@@ -393,7 +315,7 @@ public partial class NodeLinksDisplay : UserControl
     {
         InputsContainer.Children.Add(GetNodeComponent(component, resource));
     }
-    public void AddNodePoint(Type? type, string? name, int index, bool isOutput, bool isRunner = false, Dictionary<int, Dictionary<string, JToken>>? data = null)
+    public void AddNodePoint(Type? type, string? name, int index, bool isOutput, bool isRunner = false, Dictionary<int, Dictionary<string, JsonValue>>? data = null)
     {
         DockPanel dockPanel = new();
         Shape linkShape;
@@ -461,7 +383,7 @@ public partial class NodeLinksDisplay : UserControl
                     INodeComponent component = components[i];
                     if (!data.ContainsKey(index)) data.Add(index, []);
 
-                    DockPanel componentPanel = GetNodeComponent(component, new NodeResourceManager(x => { throw new Exception("Can't get value of a component."); }, data[index]), true);
+                    DockPanel componentPanel = GetNodeComponent(component, new ResourceManager(data[index]), true);
                     componentPanel.SetValue(DockPanel.DockProperty, Dock.Right);
                     componentsPanel.Children.Add(componentPanel);
                 }

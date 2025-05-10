@@ -398,3 +398,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# config file created by Avalonia by error sometimes
+config.json
+
+
+!MacroPad.Core/BasePlugin/**

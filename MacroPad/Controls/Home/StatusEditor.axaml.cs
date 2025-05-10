@@ -1,10 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using MacroPad.Core.BasePlugin.Device;
-using MacroPad.Core.Config;
 using MacroPad.Core.Device;
+using MacroPad.Core.Models.Config;
 using MacroPad.Shared.Device;
-using Newtonsoft.Json.Linq;
 
 namespace MacroPad.Controls.Home;
 
@@ -25,7 +24,7 @@ public partial class StatusEditor : UserControl
             {
                 case OutputType.Palette:
                     int selectedColor = 0;
-                    if (ButtonConfig.Status.Value != null) selectedColor = ButtonConfig.Status.Value.Value<int?>() ?? 0;
+                    if (ButtonConfig.Status.Value != null) selectedColor = ButtonConfig.Status.Value.TryGetValue(out int? value) ? value ?? 0 : 0;
                     StatusContainer.Content = new StatusEditorTypes.Palette() { Colors = (PaletteValue[])output.Palette, SelectedColor = selectedColor, Device = Device, Button = Button, ButtonConfig = ButtonConfig };
                     break;
             }

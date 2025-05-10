@@ -2,13 +2,13 @@
 
 namespace MacroPad.ViewModels
 {
-    public class GeneralViewModel : ViewModelBase
+    public class GeneralViewModel2 : ViewModelBase
     {
-        public PluginLoader PluginLoader { get; set; }
+        //public PluginLoader PluginLoader { get; set; }
         public DeviceManager DeviceManager { get; set; }
-        public GeneralViewModel()
+        public GeneralViewModel2()
         {
-            PluginLoader = new PluginLoader();
+            //PluginLoader = new PluginLoader();
             DeviceManager = new DeviceManager();
         }
     }

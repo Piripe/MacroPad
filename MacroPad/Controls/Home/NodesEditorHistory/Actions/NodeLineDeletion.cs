@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using MacroPad.Core.Config;
+using MacroPad.Core.Models.Config;
 using System.Linq;
 
 namespace MacroPad.Controls.Home.NodesEditorHistory.Actions

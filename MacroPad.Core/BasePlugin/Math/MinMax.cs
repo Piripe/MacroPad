@@ -18,7 +18,7 @@ namespace MacroPad.Core.BasePlugin.Math
         public INodeComponent[] Components => [];
 
         public bool IsVisible(IDeviceLayoutButton button, IDeviceOutput output) => true;
-        public object[] GetOutputs(IResourceManager resource)
+        public object[] GetOutputs(INodeResourceManager resource)
         {
             return [System.Math.Min(System.Math.Max((decimal)resource.GetValue(0), (decimal)resource.GetValue(1)), (decimal)resource.GetValue(2))];
         }

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MacroPad.Core.Device;
+using MacroPad.Shared.Device;
 using MacroPad.Shared.Plugin;
 using MacroPad.Shared.Plugin.Nodes;
 using System;
@@ -33,11 +34,11 @@ public partial class NodePickerCategory : UserControl
             CategoryExpander.Header = Category.Name;
             foreach (INodeGetter getter in Category.Getters)
             {
-                if (getter.IsVisible(Button, DeviceOutput)) AddNode(getter.Name, getter.Description, getter.Id);
+                if (getter.IsVisible(Button, DeviceOutput as IDeviceOutput)) AddNode(getter.Name, getter.Description, getter.Id);
             }
             foreach (INodeRunner runner in Category.Runners)
             {
-                if (runner.IsVisible(Button, DeviceOutput)) AddNode(runner.Name, runner.Description, runner.Id);
+                if (runner.IsVisible(Button, DeviceOutput as IDeviceOutput)) AddNode(runner.Name, runner.Description, runner.Id);
             }
         }
     }
